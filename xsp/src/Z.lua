@@ -7,6 +7,7 @@ Version: 0.0.1
 Author: 竹子菌
 QQ: 454689880
 Updated: 2019年1月25日03:57:16
+Project: https://github.com/bamboo98/Zlib
 
 函数列表:
 Z.loadNewApis--api转换模块(2.0转换1.9)
