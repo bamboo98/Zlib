@@ -64,7 +64,7 @@ Z.getJson=function()
 	return json
 end
 
-z.getSocketLib=function(LibName)--需要传入子模块名(dns/http/ltn12/socket/smtp/ftp等)
+Z.getSocketLib=function(LibName)--需要传入子模块名(dns/http/ltn12/socket/smtp/ftp等)
 	local ok, lib = pcall(require, 'socket.'..LibName)
 	if ok then return lib end
 	return require('Zlibs.socket.'..LibName)
