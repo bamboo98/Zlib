@@ -1,0 +1,12 @@
+{
+	"style" : "default",
+	"config" : "save_Zlib.dat",
+	"width" : 540,
+	"height" : 960,
+	"cancelscroll" : true,
+	"countdown" : 10,
+	"cancelname" : "取消",
+	"okname" : "确定",
+	"views" : [
+	]
+}
