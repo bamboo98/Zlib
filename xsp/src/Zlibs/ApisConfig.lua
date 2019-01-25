@@ -79,10 +79,7 @@ task — 任务执行模块
 
 Config.runtime=[[
 runtime — 系统/运行时模块
-实现2.0引擎runtime类的大部分功能
-(下面是没有完全实现的)
-
-runtime.openURL--1.9引擎没有提供类似功能
+实现2.0引擎runtime类的所有功能
 ]]
 Config.UI=[[
 UI — 内置UI模块

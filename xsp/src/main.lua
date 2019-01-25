@@ -1,11 +1,8 @@
-
-
 Z=require("Z")
 sysLog(Z.info)
 
 
 Z.loadNewApis()
-
 
 print(Point)
 print(Size)

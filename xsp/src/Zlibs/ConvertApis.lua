@@ -1464,10 +1464,8 @@ Construntimes.launchApp=runApp
 Construntimes.killApp=closeApp
 Construntimes.isAppRunning=appIsRunning
 Construntimes.getForegroundApp=frontAppName
+Construntimes.openURL=openURL
 
-function Construntimes.openURL(url)
-	error("1.9引擎暂不支持此函数")
-end
 
 Construntimes.android={}
 local Construntimeandroids={}
