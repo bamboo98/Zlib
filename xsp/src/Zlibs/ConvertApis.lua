@@ -1,33 +1,33 @@
 
-local ConstPoints={}
+local ConstPoints={__tag="Point"}
 Point={}
-local ConstSizes={}
+local ConstSizes={__tag="Size"}
 Size={}
-local ConstRects={}
+local ConstRects={__tag="Rect"}
 Rect={}
-local ConstColor3Bs={}
+local ConstColor3Bs={__tag="Color3B"}
 Color3B={}
-local ConstColor3Fs={}
+local ConstColor3Fs={__tag="Color3F"}
 Color3F={}
-local Constxmods={}
+local Constxmods={__tag="xmod"}
 xmod={}
-local ConstUserInfos={}
+local ConstUserInfos={__tag="UserInfo"}
 local UserInfo={}
-local ConstScriptInfos={}
+local ConstScriptInfos={__tag="ScriptInfo"}
 local ScriptInfo={}
-local Constscripts={}
+local Constscripts={__tag="script"}
 script={}
-local Constscreens={}
+local Constscreens={__tag="screen"}
 screen={}
-local Consttouchs={}
+local Consttouchs={__tag="touch"}
 touch={}
-local Conststorages={}
+local Conststorages={__tag="storage"}
 storage={}
-local Consttasks={}
+local Consttasks={__tag="task"}
 task={}
-local Construntimes={}
+local Construntimes={__tag="runtime"}
 runtime={}
-local ConstUIs={}
+local ConstUIs={__tag="UI"}
 UI={}
 
 local bit=require("Zlibs.Zbit")
@@ -69,14 +69,14 @@ os.milliTime=mTime
 
 local PointMeta={
 __add=function(self,p)
-if type(p)~="table" or p._tag~="POINT" then
+if type(p)~="table" or tostring(p.__tag)~="Point" then
 	error("Point类的加法需要同样是Point才可以相加!")
 end
 return Point(self.x+p.x,self.y+p.y)
 end
 ,
 __sub=function(self,p)
-if type(p)~="table" or p._tag~="POINT" then
+if type(p)~="table" or tostring(p.__tag)~="Point" then
 	error("Point类的减法需要同样是Point才可以相减!")
 end
 return Point(self.x-p.x,self.y-p.y)
@@ -115,7 +115,7 @@ return Point(-self.x,-self.y)
 end
 ,
 __eq=function(self,p)
-if type(p)~="table" or p._tag~="POINT" then
+if type(p)~="table" or tostring(p.__tag)~="Point" then
 	error("Point类的比较需要同样是Point才可以!")
 end
 return self.x==p.x and self.y==p.y
@@ -148,14 +148,14 @@ setmetatable(Point, {
 	local x,y
 	if #t==0 then
 		x,y=0,0
-		elseif #t==1 and type(t[1])=="table" and t[1]._tag=="POINT" then
+		elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 			x,y=t[1].x,t[1].y
 			elseif #t==2 and type(t[1])=="number" and type(t[2])=="number" then
 				x,y=round(t[1]),round(t[2])
 			else
 				error("在创建Point对象时参数传入错误!正确例子:Point()或Point(100,100)或Point(Point(100,100)),当前传入参数为:"..table.concat(t,", "))
 			end
-			return setmetatable({x = x, y = y ,_tag="POINT"}, PointMeta)
+			return setmetatable({x = x, y = y}, PointMeta)
 		end
 		})
 
@@ -165,13 +165,13 @@ ConstPoints.ZERO = Point(0, 0)
 
 local SizeMeta={
 __add=function(self,p)
-if type(p)~="table" or p._tag~="SIZE" then
+if type(p)~="table" or tostring(p.__tag)~="Size" then
 	error("Size类的加法需要同样是Size才可以相加!")
 end
 return Size(self.width+p.width,self.height+p.height)
 end,
 __sub=function(self,p)
-if type(p)~="table" or p._tag~="SIZE" then
+if type(p)~="table" or tostring(p.__tag)~="Size" then
 	error("Size类的减法需要同样是Size才可以相减!")
 end
 return Size(self.width-p.width,self.height-p.height)
@@ -204,7 +204,7 @@ __unm=function(self)
 return Size(-self.width,-self.height)
 end,
 __eq=function(self,p)
-if type(p)~="table" or p._tag~="SIZE" then
+if type(p)~="table" or tostring(p.__tag)~="Size" then
 	error("Size类的比较需要同样是Size才可以!")
 end
 return self.width==p.width and self.height==p.height
@@ -236,16 +236,16 @@ setmetatable(Size, {
 	local width,height
 	if #t==0 then
 		width,height=0,0
-		elseif #t==1 and type(t[1])=="table" and t[1]._tag=="POINT" then
+		elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 			width,height=t[1].x,t[1].y
-			elseif #t==1 and type(t[1])=="table" and t[1]._tag=="SIZE" then
+			elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Size" then
 				width,height=t[1].width,t[1].height
 				elseif #t==2 and type(t[1])=="number" and type(t[2])=="number" then
 					width,height=round(t[1]),round(t[2])
 				else
 					error("在创建Size对象时参数传入错误!正确例子:Size()或Size(100,100)或Size(Point(100,100))或Size(Size(100,100)),当前传入参数为:"..table.concat(t,", "))
 				end
-				return setmetatable({width = width, height = height ,_tag="SIZE"}, SizeMeta)
+				return setmetatable({width = width, height = height}, SizeMeta)
 			end
 			})
 
@@ -282,16 +282,16 @@ setmetatable(Rect, {
 	local width,height
 	if #t==0 then
 		x,y,width,height=0,0,0,0
-		elseif #t==1 and type(t[1])=="table" and t[1]._tag=="RECT" then
+		elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Rect" then
 			x,y,width,height=t[1].x,t[1].y,t[1].width,t[1].height
-			elseif #t==2 and type(t[1])=="table" and t[1]._tag=="POINT" and type(t[2])=="table" and t[2]._tag=="SIZE" then
+			elseif #t==2 and type(t[1])=="table" and tostring(t[1].__tag)=="Point" and type(t[2])=="table" and tostring(t[2].__tag)=="Size" then
 				x,y,width,height=t[1].x,t[1].y,t[2].width,t[2].height
 				elseif #t==4 and type(t[1])=="number" and type(t[2])=="number" and type(t[3])=="number" and type(t[4])=="number" then
 					x,y,width,height=...
 				else
 					error("在创建Rect对象时参数传入错误!当前传入参数为:"..table.concat(t,", "))
 				end
-				return setmetatable({x = x, y = y ,width = width, height = height ,_tag="RECT"}, RectMeta)
+				return setmetatable({x = x, y = y ,width = width, height = height}, RectMeta)
 			end
 			})
 
@@ -307,13 +307,13 @@ function ConstRects:size()
 	return Size(self.width,self.height)
 end
 function ConstRects:contains(p)
-	if type(p)~="table" or p._tag~="POINT" then
+	if type(p)~="table" or tostring(p.__tag)~="Point" then
 		error("contains函数参数错误,需要传入Point对象")
 	end
 	return self.x<=p.x and self.x+self.width>=p.x and self.y<=p.y and self.y+self.height>=p.y
 end
 function ConstRects:union(r)
-	if type(r)~="table" or r._tag~="RECT" then
+	if type(r)~="table" or tostring(r.__tag)~="Rect" then
 		error("union函数参数错误,需要传入Rect对象")
 	end
 	local r1tl,r1br=self:tl(),self:br()
@@ -321,7 +321,7 @@ function ConstRects:union(r)
 	return Rect(math.min(r1tl.x,r2tl.x),math.min(r1tl.y,r2tl.y),math.max(r1br.x,r2br.x)-math.min(r1tl.x,r2tl.x),math.max(r1br.y,r2br.y)-math.min(r1tl.y,r2tl.y))
 end
 function ConstRects:intersect(r)
-	if type(r)~="table" or r._tag~="RECT" then
+	if type(r)~="table" or tostring(r.__tag)~="Rect" then
 		error("intersect函数参数错误,需要传入Rect对象")
 	end
 	local r1tl,r1br=self:tl(),self:br()
@@ -371,14 +371,14 @@ setmetatable(Color3B, {
 				elseif #t==3 and type(t[1])=="number" and type(t[2])=="number" and type(t[3])=="number" then
 					r,g,b=...
 					if r<0 or r>0xff or g<0 or g>0xff or b<0 or b>0xff then error("在创建Color3B对象时参数传入错误!当前传入参数为:"..table.concat(t,", ")) end
-					elseif #t==1 and type(t[1])=="table" and t[1]._tag=="COLOR3B" then
+					elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Color3B" then
 						r,g,b=t[1].r,t[1].g,t[1].b
-						elseif #t==1 and type(t[1])=="table" and t[1]._tag=="COLOR3F" then
+						elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Color3F" then
 							r,g,b=round(t[1].r*0xff),round(t[1].g*0xff),round(t[1].b*0xff)
 						else
 							error("在创建Rect对象时参数传入错误!当前传入参数为:"..table.concat(t,", "))
 						end
-						return setmetatable({r=r,g=g,b=b ,_tag="COLOR3B"}, Color3BMeta)
+						return setmetatable({r=r,g=g,b=b}, Color3BMeta)
 					end
 					})
 
@@ -428,14 +428,14 @@ setmetatable(Color3F, {
 				elseif #t==3 and type(t[1])=="number" and type(t[2])=="number" and type(t[3])=="number" then
 					r,g,b=...
 					if r<0 or r>1 or g<0 or g>1 or b<0 or b>1 then error("在创建Color3B对象时参数传入错误!当前传入参数为:"..table.concat(t,", ")) end
-					elseif #t==1 and type(t[1])=="table" and t[1]._tag=="COLOR3B" then
+					elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Color3B" then
 						r,g,b=t[1].r/0xff,t[1].g/0xff,t[1].b/0xff
-						elseif #t==1 and type(t[1])=="table" and t[1]._tag=="COLOR3F" then
+						elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Color3F" then
 							r,g,b=t[1].r,t[1].g,t[1].b
 						else
 							error("在创建Rect对象时参数传入错误!当前传入参数为:"..table.concat(t,", "))
 						end
-						return setmetatable({r=r,g=g,b=b ,_tag="COLOR3F"}, Color3FMeta)
+						return setmetatable({r=r,g=g,b=b}, Color3FMeta)
 					end
 					})
 
@@ -787,7 +787,7 @@ end
 function Constscreens.getRGB(...)
 	local t={...}
 	local TrRect
-	if #t==1 and type(t[1])=="table" and t[1]._tag=="POINT" then
+	if #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 		if screen.Transform and (screen.MockMode==screen.MOCK_INPUT or screen.MockMode==screen.MOCK_BOTH) then
 			TrRect=screen.Transform(screen.MOCK_INPUT_FIXED,Rect(t[1].x,t[1].y,0,0))
 		else
@@ -808,7 +808,7 @@ end
 function Constscreens.getColor(...)
 	local t={...}
 	local TrRect
-	if #t==1 and type(t[1])=="table" and t[1]._tag=="POINT" then
+	if #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 		if screen.Transform and (screen.MockMode==screen.MOCK_INPUT or screen.MockMode==screen.MOCK_BOTH) then
 			TrRect=screen.Transform(screen.MOCK_INPUT_FIXED,Rect(t[1].x,t[1].y,0,0))
 		else
@@ -852,9 +852,9 @@ function Constscreens.matchColor(...)
 		Fuzz=tonumber(t[4]) or 100
 		getc=Constscreens.getColor(t[1],t[2])
 		if type(t[3])=="table" then
-			if t[3]._tag=="COLOR3B" then
+			if tostring(t[3].__tag)=="Color3B" then
 				return Compare_Color(getc,t[3],Fuzz)
-			elseif  t[3]._tag=="COLOR3F" then
+			elseif  tostring(t[3].__tag)=="Color3F" then
 				return Compare_Color(getc,Color3B(t[3]),Fuzz)
 			else
 				error("matchColor函数参数传入错误")
@@ -864,13 +864,13 @@ function Constscreens.matchColor(...)
 		else
 			error("matchColor函数参数传入错误")
 		end
-	elseif #t>=2 and type(t[1])=="table" and t[1]._tag=="POINT" then
+	elseif #t>=2 and type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 		Fuzz=tonumber(t[3]) or 100
 		getc=Constscreens.getColor(t[1])
 		if type(t[2])=="table" then
-			if t[2]._tag=="COLOR3B" then
+			if tostring(t[2].__tag)=="Color3B" then
 				return Compare_Color(getc,t[2],Fuzz)
-			elseif  t[2]._tag=="COLOR3F" then
+			elseif  tostring(t[2].__tag)=="Color3F" then
 				return Compare_Color(getc,Color3B(t[2]),Fuzz)
 			else
 				error("matchColor函数参数传入错误")
@@ -925,7 +925,7 @@ function Constscreens.matchColors(...)
 end
 
 function Constscreens.findImage(rect,image,fuzzness,priority,ignoreColor)
-	if type(rect)~="table" or rect._tag~="RECT" then
+	if type(rect)~="table" or tostring(rect.__tag)~="Rect" then
 		error("findImage函数参数传入错误")
 	end
 	if type(image)~="string" then
@@ -951,7 +951,7 @@ local PRIORITY_LIST={
 }
 
 function Constscreens.findColor(rect,color,globalFuzz,priority)
-	if type(rect)~="table" or rect._tag~="RECT" then
+	if type(rect)~="table" or tostring(rect.__tag)~="Rect" then
 		error("findColor函数参数传入错误")
 	end
 
@@ -984,7 +984,7 @@ function Constscreens.findColor(rect,color,globalFuzz,priority)
 			fuzz=globalFuzz
 		}}
 	elseif type(color)=="table" then
-		if color._tag=="COLOR3B" then
+		if tostring(color.__tag)=="Color3B" then
 			t1={
 			{
 				pos=Point.ZERO,
@@ -992,7 +992,7 @@ function Constscreens.findColor(rect,color,globalFuzz,priority)
 				offset=nil,
 				fuzz=globalFuzz
 			}}
-		elseif color._tag=="COLOR3F" then
+		elseif tostring(color.__tag)=="Color3F" then
 			t1={
 			{
 				pos=Point.ZERO,
@@ -1089,7 +1089,7 @@ end
 
 
 function Constscreens.findColors(rect,color,globalFuzz,priority,limit)
-	if type(rect)~="table" or rect._tag~="RECT" then
+	if type(rect)~="table" or tostring(rect.__tag)~="Rect" then
 		error("findColor函数参数传入错误")
 	end
 
@@ -1124,7 +1124,7 @@ function Constscreens.findColors(rect,color,globalFuzz,priority,limit)
 			fuzz=globalFuzz
 		}}
 	elseif type(color)=="table" then
-		if color._tag=="COLOR3B" then
+		if tostring(color.__tag)=="Color3B" then
 			t1={
 			{
 				pos=Point.ZERO,
@@ -1132,7 +1132,7 @@ function Constscreens.findColors(rect,color,globalFuzz,priority,limit)
 				offset=nil,
 				fuzz=globalFuzz
 			}}
-		elseif color._tag=="COLOR3F" then
+		elseif tostring(color.__tag)=="Color3F" then
 			t1={
 			{
 				pos=Point.ZERO,
@@ -1216,7 +1216,7 @@ function Consttouchs.down(index,...)
 		error("down函数传入参数错误")
 	end
 	local TrRect
-	if type(t[1])=="table" and t[1]._tag=="POINT" then
+	if type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 		TrRect=Rect(t[1].x,t[1].y,0,0)
 	elseif type(t[1])=="number" and type(t[2])=="number" then
 		TrRect=Rect(t[1],t[2],0,0)
@@ -1236,7 +1236,7 @@ function Consttouchs.move(index,...)
 		error("move函数传入参数错误")
 	end
 	local TrRect
-	if type(t[1])=="table" and t[1]._tag=="POINT" then
+	if type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 		TrRect=Rect(t[1].x,t[1].y,0,0)
 	elseif type(t[1])=="number" and type(t[2])=="number" then
 		TrRect=Rect(t[1],t[2],0,0)
@@ -1256,7 +1256,7 @@ function Consttouchs.up(index,...)
 		error("up函数传入参数错误")
 	end
 	local TrRect
-	if type(t[1])=="table" and t[1]._tag=="POINT" then
+	if type(t[1])=="table" and tostring(t[1].__tag)=="Point" then
 		TrRect=Rect(t[1].x,t[1].y,0,0)
 	elseif type(t[1])=="number" and type(t[2])=="number" then
 		TrRect=Rect(t[1],t[2],0,0)
@@ -1468,7 +1468,7 @@ Construntimes.openURL=openURL
 
 
 Construntimes.android={}
-local Construntimeandroids={}
+local Construntimeandroids={__tag="runtimeandroid"}
 
 setmetatable(Construntimes.android, {
 	__index = function(self,k)
@@ -1486,7 +1486,7 @@ setmetatable(Construntimes.android, {
 Construntimeandroids.getSystemProperty=getSystemProperty
 
 Construntimes.ios={}
-local Construntimeioss={}
+local Construntimeioss={__tag="runtimeios"}
 
 setmetatable(Construntimes.ios, {
 	__index = function(self,k)
