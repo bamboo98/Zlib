@@ -8,7 +8,7 @@
 -- Declare module and import dependencies
 -----------------------------------------------------------------------------
 local base = _G
-local ltn12 = require("socket.ltn12")
+local ltn12 = require("Zlibs.socket.ltn12")
 local mime = require("mime.core")
 local io = require("io")
 local string = require("string")

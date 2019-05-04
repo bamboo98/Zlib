@@ -12,11 +12,11 @@ local coroutine = require("coroutine")
 local string = require("string")
 local math = require("math")
 local os = require("os")
-local socket = require("socket.socket")
-local tp = require("socket.tp")
-local ltn12 = require("socket.ltn12")
-local headers = require("socket.headers")
-local mime = require("socket.mime")
+local socket = require("Zlibs.socket.socket")
+local tp = require("Zlibs.socket.tp")
+local ltn12 = require("Zlibs.socket.ltn12")
+local headers = require("Zlibs.socket.headers")
+local mime = require("Zlibs.socket.mime")
 
 socket.smtp = {}
 local _M = socket.smtp

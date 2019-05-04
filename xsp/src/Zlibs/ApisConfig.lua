@@ -6,7 +6,7 @@ Config.Point=[[
 支持+、-、*、/、==和取反等基本运算。
 ]]
 Config.Size=[[
-类Size : 尺♂寸
+类Size : 尺寸
 实现2.0引擎Size类的所有功能
 支持+、-、*、/、==和取反等基本运算。
 ]]
@@ -32,7 +32,8 @@ xmod.PRODUCT_CODE--极少部分情况下会无法正确获取到小精灵的识�
 xmod.getPublicPath--部分情况会无法正确获取,返回[public]
 xmod.getPrivatePath--1.9引擎没有私有目录,返回[public]
 xmod.resolvePath--适配了1.9引擎,会把[private]转化为[public],并且不会返回具体目录(具体目录在1.9引擎下无效)
-xmod.setOnEventCallback--1.9引擎限制,xmod.EVENT_ON_RUNTIME_ERROR的回调没有直接实现,需要使用此功能的请把脚本主函数使用pcall调用,出错时调用onSpiritErrorExit函数,并传入errMsg
+xmod.setOnEventCallback--1.9引擎限制,xmod.EVENT_ON_RUNTIME_ERROR的回调没有直接实现,
+    需要使用此功能的请把脚本主函数使用pcall调用,出错时调用onSpiritErrorExit函数,并传入errMsg
 ]]
 Config.script=[[
 script — 脚本控制模块

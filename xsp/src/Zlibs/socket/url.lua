@@ -10,7 +10,7 @@
 local string = require("string")
 local base = _G
 local table = require("table")
-local socket = require("socket.socket")
+local socket = require("Zlibs.socket.socket")
 
 socket.url = {}
 local _M = socket.url
@@ -219,6 +219,7 @@ end
 --   corresponding absolute url
 -----------------------------------------------------------------------------
 function _M.absolute(base_url, relative_url)
+    local base_parsed
     if base.type(base_url) == "table" then
         base_parsed = base_url
         base_url = _M.build(base_parsed)

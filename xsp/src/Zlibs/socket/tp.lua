@@ -9,8 +9,8 @@
 -----------------------------------------------------------------------------
 local base = _G
 local string = require("string")
-local socket = require("socket.socket")
-local ltn12 = require("socket.ltn12")
+local socket = require("Zlibs.socket.socket")
+local ltn12 = require("Zlibs.socket.ltn12")
 
 socket.tp = {}
 local _M = socket.tp
@@ -74,7 +74,7 @@ function metat.__index:command(cmd, arg)
 end
 
 function metat.__index:sink(snk, pat)
-    local chunk, err = c:receive(pat)
+    local chunk, err = self.c:receive(pat)
     return snk(chunk, err)
 end
 
