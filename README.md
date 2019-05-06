@@ -23,3 +23,4 @@ JSON库 `local JSON = require "Zlibs.tool.JSON"`(注意JSON库调用需要使用
 RresetColor 预设颜色 `require "Zlibs.tool.RresetColor"`  
 type 函数重定义 `local type = require "Zlibs.tool.type"`  
 api转换,在叉叉1.9引擎环境运行大部分2.0引擎代码 `require "Zlibs.ConvertApis"`  
+ZY库 对接竹云平台 `local ZY = require "Zlibs.tool.ZY"`
