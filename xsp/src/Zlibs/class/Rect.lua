@@ -93,6 +93,10 @@ function obj:__call(...)
 	setmetatable(o, obj)
 	local t={...}
 	if #t==1 and type(t[1])=="string" then
+		if AllRect[t[1]] then
+			Zlog.warn("点类型出现重名[%s],旧数据将会被新数据覆盖",t[1])
+			o=AllRect[t[1]]
+		end
 		rawset(o,"name",t[1])
 		AllRect[o.name]=o
 		return function(data)

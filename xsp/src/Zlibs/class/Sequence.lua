@@ -55,6 +55,10 @@ function obj:__call(name)
 		Zlog.fatal("请使用字符串作为序列的名称")
 	end
 	local o=setmetatable({name=name,point={},str=""}, obj)
+	if AllSequence[name] then
+		Zlog.warn("颜色序列类型出现重名[%s],旧数据将会被新数据覆盖",name)
+		o=AllSequence[name]
+	end
 	AllSequence[name] = o
 	return function (p)
 		return o:add(p)
@@ -106,9 +110,9 @@ function obj.add(self,p)
 	serializePoint(self)
 	return self
 end
-function obj.match(self)
+function obj.match(self,fuzz)
 	for _,v in ipairs(self.point) do
-		if not v:match() then return false end
+		if not v:match(fuzz) then return false end
 	end
 	return true
 end
@@ -128,7 +132,17 @@ elseif version==2 then
 		return api.findColors(rect,self,globalFuzz,priority,limit)
 	end
 end
+function obj.tap(self)
+	if self.point[1] then self.point[1]:tap() end
+end
 
+function obj.matchTap(self,fuzz)
+	if self:match(fuzz) then
+		if self.point[1] then self.point[1]:tap() end
+		return true
+	end
+	return false
+end
 --类初始化函数,因为会循环引用,所以需要单独用函数初始化
 function obj._init()
 	if not api then api = require "Zlibs.class.api" end

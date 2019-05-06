@@ -35,6 +35,10 @@ function obj:__call(name)
 		Zlog.fatal("请使用字符串作为不规则区域的名称")
 	end
 	local o=setmetatable({name=name,mode={},area={}}, obj)
+	if allRegion[name] then
+		Zlog.warn("颜色序列类型出现重名[%s],旧数据将会被新数据覆盖",name)
+		o=allRegion[name]
+	end
 	allRegion[name]=o
 	return function (t)
 		t = t or {}

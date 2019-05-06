@@ -80,6 +80,7 @@ function obj.toString(self)
 	return string.format("0x%02x%02x%02x",self.r,self.g,self.b)
 end
 function obj.match(self,other,fuzz)
+	if self==obj.INVALID then return false end
 	fuzz=fuzz or 100
 	fuzz=(100-fuzz)/100*0xff
 	return abs(self.r-other.r)<=fuzz and abs(self.g-other.g)<=fuzz and abs(self.b-other.b)<=fuzz

@@ -15,22 +15,22 @@ end
 --- mt.deepcopy 深度拷贝
 -- @param obj object
 function mt.deepcopy(obj)
-    local lookup_table = {}
-    local function _copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
-        end
-        local new_table = {}
-        lookup_table[object] = new_table
-        for index, value in pairs(object) do
-            new_table[_copy(index)] = _copy(value)
-        end
-        return setmetatable(new_table, getmetatable(object))
-    end
+	local lookup_table = {}
+	local function _copy(object)
+		if type(object) ~= "table" then
+			return object
+		elseif lookup_table[object] then
+			return lookup_table[object]
+		end
+		local new_table = {}
+		lookup_table[object] = new_table
+		for index, value in pairs(object) do
+			new_table[_copy(index)] = _copy(value)
+		end
+		return setmetatable(new_table, getmetatable(object))
+	end
 
-    return _copy(obj)
+	return _copy(obj)
 end
 --- mt.simplecopy 浅拷贝
 -- @param tbl table
@@ -45,7 +45,7 @@ function mt.simplecopy(tbl)
 	end
 	return newtbl
 end
---- mt.shuffle 打乱数组顺序(洗牌算法),返回一个新的数组,旧数组将被清空
+--- mt.shuffle 打乱数组顺序(洗牌算法),返回一个新的数组
 -- @param tbl 数组
 function mt.shuffle(tbl)
 	tbl=mt.simplecopy(tbl)
@@ -80,6 +80,40 @@ function mt.writefile(path,tbl)
 	local f = io.open(path, "w")
 	f:write(tbl)
 	f:close()
+end
+
+function mt.print( t )
+	local print_r_cache={}
+	local function sub_print_r(t,indent)
+		if (print_r_cache[tostring(t)]) then
+			print(indent.."*"..tostring(t))
+		else
+			print_r_cache[tostring(t)]=true
+			if (type(t)=="table") then
+				for pos,val in pairs(t) do
+					if (type(val)=="table") then
+						print(indent.."["..pos.."] => "..tostring(t).." {")
+						sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+						print(indent..string.rep(" ",string.len(pos)+6).."}")
+					elseif (type(val)=="string") then
+						print(indent.."["..pos..'] => "'..val..'"')
+					else
+						print(indent.."["..pos.."] => "..tostring(val))
+					end
+				end
+			else
+				print(indent..tostring(t))
+			end
+		end
+	end
+	if (type(t)=="table") then
+		print(tostring(t).." {")
+		sub_print_r(t,"  ")
+		print("}")
+	else
+		sub_print_r(t,"  ")
+	end
+	print()
 end
 
 return mt

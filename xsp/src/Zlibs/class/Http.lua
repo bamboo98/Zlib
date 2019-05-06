@@ -390,8 +390,8 @@ local function table_to_urlstr(tbl)
 	local result=""
 	local first=true
 	for k,v in pairs(tbl) do
-		k=string.urlencode(k)
-		v=string.urlencode(v)
+		k=string.urlencode(tostring(k))
+		v=string.urlencode(tostring(v))
 		if not first then
 			result="&" .. result
 		end

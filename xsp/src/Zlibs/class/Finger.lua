@@ -172,7 +172,9 @@ end
 -- @param self self
 -- @param ...  x,y或point
 function obj.down(self,...)
-    if not self then
+    local t={...}
+    if type(self)~="Finger" or self==obj then
+        table.insert(t,self)
         self=obj:__call()
     end
     if self.id==-1 then
@@ -182,7 +184,6 @@ function obj.down(self,...)
         Zlog.error("%s未松开即进行了按下操作,将会自动松开手指再按下,未松开的坐标(%d,%d)",tostring(self),self.x,self.y)
         self:up()
     end
-    local t={...}
     if #t==1 then
         api.touchDown(self.id,t[1].x,t[1].y)
         self.x,self.y=t[1].x,t[1].y
@@ -190,6 +191,7 @@ function obj.down(self,...)
         api.touchDown(self.id,t[1],t[2])
         self.x,self.y=t[1],t[2]
     end
+    Zlog.trace("%d号手指在%d,%d按下",self.id,self.x,self.y)
     return self
 end
 --- obj.move 将手指移动到x,y或point点,没有按下时会报错
@@ -217,6 +219,7 @@ function obj.up(self,...)
         Zlog.fatal("在松开手指之前你必须先按下(down)")
     end
     local t={...}
+    Zlog.trace("%d号手指在%d,%d抬起",self.id,self.x,self.y)
     if #t==1 then
         api.touchUp(self.id,t[1].x,t[1].y)
         self.x,self.y=-1,-1
@@ -239,12 +242,21 @@ end
 -- @param step        滑动每步的最大步长
 -- @param delay       滑动每步之间的延迟,毫秒,建议0
 -- @param slowlyOnEnd 在滑动快结束的时候额外的线性延迟总时间,毫秒,在滑动最后1/5的步骤或倒数50步时开始减速
-function obj.simpleMove(self,t,step,delay,slowlyOnEnd)
-    slowlyOnEnd=slowlyOnEnd or 0
+function obj.simpleMove(...)
+    local param={...}
+    local self,t,step,delay,slowlyOnEnd
     local simplemode=false
-    if not self then
+    if type(param[1])~="Finger" then
         simplemode=true
         self=obj.__call()
+        t,step,delay,slowlyOnEnd=param[1],param[2] or 4,param[3] or 0,param[4] or 0
+    else
+        if param[1]==obj then
+            self=obj.__call()
+            t,step,delay,slowlyOnEnd=param[2],param[3] or 4,param[4] or 0,param[5] or 0
+        else
+            t,step,delay,slowlyOnEnd=param[1],param[2] or 4,param[3] or 0,param[4] or 0
+        end
     end
     if self.id==-1 then
         if type(t)=="Point" then
@@ -290,11 +302,21 @@ end
 -- @param speed       滑动速度默认1,越大点之间的间隔越大
 -- @param delay       滑动每步的额外延迟,建议0
 -- @param slowlyOnEnd 在滑动快结束的时候额外的线性延迟总时间,毫秒,在滑动最后1/5的步骤或倒数50步时开始减速
-function obj.curveMove(self,t,speed,delay,slowlyOnEnd)
+function obj.curveMove(...)
+    local param={...}
+    local self,t,speed,delay,slowlyOnEnd
     local simplemode=false
-    if not self then
+    if type(param[1])~="Finger" then
         simplemode=true
         self=obj.__call()
+        t,speed,delay,slowlyOnEnd=param[1],param[2] or 1,param[3] or 0,param[4] or 0
+    else
+        if param[1]==obj then
+            self=obj.__call()
+            t,speed,delay,slowlyOnEnd=param[2],param[3] or 1,param[4] or 0,param[5] or 0
+        else
+            t,speed,delay,slowlyOnEnd=param[1],param[2] or 1,param[3] or 0,param[4] or 0
+        end
     end
     if self.id==-1 then
         if type(t)=="Point" then

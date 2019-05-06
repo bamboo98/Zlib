@@ -2,6 +2,7 @@
 local mt={}
 setmetatable(mt,{__index=string})
 
+--这个表就是控制允许出现哪些随机字符,可以自行删减
 local randomlist={
 	1,2,3,4,5,6,7,8,9,0,
 	"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -108,14 +109,14 @@ end
 -- @param p 去除的字符,默认为空白字符%s
 function mt.ltrim(s,p)
 	p=p or "%s"
-	return string.sub(s,"^"..p.."*","")
+	return string.gsub(s,"^"..p.."*","")
 end
 --- mt.rtrim 去除字符串后导符号
 -- @param s 字符串
 -- @param p 去除的字符,默认为空白字符%s
 function mt.rtrim(s,p)
 	p=p or "%s"
-	return string.sub(s,"(.-)"..p.."*$","")
+	return string.gsub(s,"(.-)"..p.."*$","")
 end
 --- mt.trim 去除字符串前导和后导字符
 -- @param s 字符串

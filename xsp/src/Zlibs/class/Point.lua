@@ -3,6 +3,7 @@ local math = require "Zlibs.class.math"
 local Color = require "Zlibs.class.Color"
 local type = require "Zlibs.tool.type"
 local string = require "Zlibs.class.string"
+local Finger
 local api
 local obj={}
 local funcValues={}
@@ -33,12 +34,12 @@ function obj:__tostring()
 	if self.name=="default" then
 		return string.format("%s(%d ,%d)",obj.__tag,self.x,self.y)
 	else
-		return string.format("%s \"%s\" \"%d|%d|%s%s%s\"",
+		return string.format("%s \"%s\" \"%d|%d%s%s%s\"",
 			obj.__tag,
 			self.name,
 			self.x,self.y,
-			self.color:toString(),
-			self.offset~=Color.INVALID and "-"..self.offset:toString() or "",
+			self.color~=Color.INVALID and "|"..self.color:toString() or "",
+			self.color~=Color.INVALID and self.offset~=Color.INVALID and "-"..self.offset:toString() or "",
 			self.fuzz and "|"..self.fuzz or ""
 		)
 	end
@@ -80,6 +81,10 @@ function obj:__call(...)
 	setmetatable(o, obj)
 	local t={...}
 	if #t==1 and type(t[1])=="string" then
+		if AllPoint[t[1]] then
+			Zlog.warn("点类型出现重名[%s],旧数据将会被新数据覆盖",t[1])
+			o=AllPoint[t[1]]
+		end
 		rawset(o,"name",t[1])
 		AllPoint[o.name]=o
 		return function(data)
@@ -88,7 +93,7 @@ function obj:__call(...)
 				o.x=tonumber(data[1] or -1)
 				o.y=tonumber(data[2] or -1)
 				local c=string.split(data[3] or "","-")
-				o.color=c[1] and Color(tonumber(c[1])) or Color.INVALID
+				o.color=c[1]~="" and Color(tonumber(c[1])) or Color.INVALID
 				o.offset=c[2] and Color(tonumber(c[2])) or Color.INVALID
 				o.fuzz=data[4] and tonumber(data[4])
 			elseif type(data)=="table" then
@@ -161,30 +166,41 @@ function obj.toString(self)
 	if self.color==Color.INVALID then
 		return string.format("%d,%d",self.x,self.y)
 	else
-		return string.format("%d|%d|%s%s%s",
+		return string.format("%d|%d%s%s%s",
 				self.x,self.y,
-				self.color:toString(),
-				self.offset~=Color.INVALID and "-"..self.offset:toString() or "",
+				self.color~=Color.INVALID and "|"..self.color:toString() or "",
+				self.color~=Color.INVALID and self.offset~=Color.INVALID and "-"..self.offset:toString() or "",
 				self.fuzz and "|"..self.fuzz or ""
 			)
 	end
 end
-function obj.match(self)
+function obj.match(self,fuzz)
 	if self.color == Color.INVALID then return false end
+	local r,g,b=api.getColorRGB(self.x,self.y)
 	if self.offset == Color.INVALID then
-		return self.color:matchRGB(api.getColorRGB(self.x,self.y),self.fuzz)
+		return self.color:matchRGB(r,g,b,fuzz or self.fuzz)
 	else
-		return self.color:matchRGBByOffset(api.getColorRGB(self.x,self.y),self.offset)
+		return self.color:matchRGBByOffset(r,g,b,self.offset)
 	end
 end
 
+function obj.tap(self)
+	Finger.tap(self)
+end
 
-
+function obj.matchTap(self,fuzz)
+	if self:match(fuzz) then
+		Finger.tap(self)
+		return true
+	end
+	return false
+end
 
 
 --类初始化函数,因为会循环引用,所以需要单独用函数初始化
 function obj._init()
 	if not api then api = require "Zlibs.class.api" end
+	if not Finger then Finger = require "Zlibs.class.Finger" end
 end
 --成员函数结束
 --/////////////////////////////////////////
