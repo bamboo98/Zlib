@@ -1,6 +1,8 @@
 local string = require "Zlibs.class.string"
 local Zlog = require "Zlibs.class.Log"
 local Point = require "Zlibs.class.Point"
+local rg = require "Zlibs.class.Rect".get
+local sg = require "Zlibs.class.Sequence".get
 --version 1:1.9引擎 2:2.0引擎
 local version = 1
 if table.unpack then version = 2 end
@@ -63,6 +65,8 @@ if version==1 then
     --针对1.9的api
     local findColor=getfunc("findColor","findColor")
     api.findColor=function(rect,color,degree,hdir,vdir,priority)
+        if type(rect)=="string" then rect=rg(rect) end
+        if type(color)=="string" then color=sg(color) end
         local x,y = findColor(rect:toTable(),color.str,degree or 100,hdir or 0,vdir or 0,priority or 0)
         if x==-1 then return Point.INVALID end
         return Point(x,y)
@@ -136,6 +140,8 @@ if version==1 then
         return allresult
     end
     api.findColors=function(rect,color,degree,hdir,vdir,priority,limit)
+        if type(rect)=="string" then rect=rg(rect) end
+        if type(color)=="string" then color=sg(color) end
         local ret = RepairFindColors(
             rect:toTable(),color.str,
             degree or 100,hdir or 0,vdir or 0,priority or 0,limit or 200)
@@ -151,12 +157,16 @@ elseif version==2 then
     --针对2.0的api
     local findColor=getfunc("findColor","screen.findColor")
     api.findColor=function(rect,color,globalFuzz,priority)
+        if type(rect)=="string" then rect=rg(rect) end
+        if type(color)=="string" then color=sg(color) end
         local x,y = findColor(rect:toNaiveRect(),color.str,globalFuzz or 100,priority)
         if x==-1 then return Point.INVALID end
         return Point(x,y)
     end
     local findColors=getfunc("findColors","screen.findColors")
     api.findColors=function(rect,color,globalFuzz,priority,limit)
+        if type(rect)=="string" then rect=rg(rect) end
+        if type(color)=="string" then color=sg(color) end
         local ret = findColors(rect:toNaiveRect(),color.str,globalFuzz or 100,priority,limit)
         for i=1,#ret do
             ret[i]=Point(ret[i].x,ret[i].y)
