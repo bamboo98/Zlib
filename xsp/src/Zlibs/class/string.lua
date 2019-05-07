@@ -109,14 +109,14 @@ end
 -- @param p 去除的字符,默认为空白字符%s
 function mt.ltrim(s,p)
 	p=p or "%s"
-	return string.gsub(s,"^"..p.."*","")
+	return (string.gsub(s,"^"..p.."*",""))
 end
 --- mt.rtrim 去除字符串后导符号
 -- @param s 字符串
 -- @param p 去除的字符,默认为空白字符%s
 function mt.rtrim(s,p)
 	p=p or "%s"
-	return string.gsub(s,"(.-)"..p.."*$","")
+	return (string.gsub(s,p.."*$",""))
 end
 --- mt.trim 去除字符串前导和后导字符
 -- @param s 字符串
