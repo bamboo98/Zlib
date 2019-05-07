@@ -1,8 +1,8 @@
 math.randomseed(os.time())
-init("0",1)
+--init("0",1)
 
-local Z = require("Z")
-Z.init()
+require "Z".init()
+
 
 local DebugHelper = require "Zlibs.tool.DebugHelper"
 local log = require "Zlibs.class.Log"
@@ -23,9 +23,9 @@ local Finger = require "Zlibs.class.Finger"
 
 
 DebugHelper.checkMemoryUsed()
-local http = require "Zlibs.class.Http"
+--local http = require "Zlibs.class.Http"
 
-local bb=require "Zlibs.class.BlackBoard"
+--local bb=require "Zlibs.class.BlackBoard"
 
 -- Point "测试点" {pos=Point(100,100),color=0x3366ff,offset=0x010101}
 -- Point "测试点2" "100|100|0x3366ff-0x010101"
@@ -38,3 +38,26 @@ local bb=require "Zlibs.class.BlackBoard"
 
 -- print(Sequence.get "序列1")
 -- print(Sequence.get "序列1"[2])
+
+--local ZY=require "Zlibs.tool.ZY"
+--竹云库初始化
+--ZY.init()--具体参数进入文件Zlibs.tool.ZY.lua中设置,自带叉叉init函数的调用
+local string= require "Zlibs.class.string"
+init("0",0)
+local f1=Finger()
+f1:tap(456,131)
+-- f1:down(622,570)
+-- f1:curveMove({Point(335,664),Point(435,964),Point(701,1042),Point(739,1240),Point(445,1315)}
+-- ,5,0,1000)
+-- f1:up()
+-- Finger.tap(456,131)
+-- Finger.curveMove({Point(622,570),Point(335,664),Point(435,964),Point(701,1042),Point(739,1240),Point(445,1315)}
+-- ,5,0,1000)
+-- Finger:tap(456,131)
+-- Finger:curveMove({Point(622,570),Point(335,664),Point(435,964),Point(701,1042),Point(739,1240),Point(445,1315)}
+-- ,5,0,1000)
+-- Finger:tap(456,131)
+Finger:simpleMove({Point(622,570),Point(335,664),Point(435,964),Point(701,1042),Point(739,1240),Point(445,1315)}
+,5,0,1000)
+Finger:curveMove({Point(622,570),Point(335,664),Point(435,964),Point(701,1042),Point(739,1240),Point(445,1315)}
+,5,0,1000)

@@ -8,6 +8,8 @@ local api
 local fingers={true,true,true,true,true,true,true,true,true,true}
 local obj={}
 
+local Finger=setmetatable({},obj)
+
 --默认变量
 obj.__tag="Finger"
 obj.id=-1
@@ -85,7 +87,7 @@ local function getCurveWay(pos,poscount,speed,way)
         Zlog.fatal("生成一条曲线需要至少3个点")
     end
     way=way or {{},{}}
-    local scale=0.6
+    local scale=0.7--曲线系数,0.1~1,大于1会导致鬼畜,越接近1越圆滑(绕得越远)
     local midpoints={{},{}}
     for i=0,poscount-1 do
         local nexti=(i+1)%poscount
@@ -171,12 +173,25 @@ end
 --- obj.down 在x,y点或point点按下手指,返回Finger
 -- @param self self
 -- @param ...  x,y或point
-function obj.down(self,...)
-    local t={...}
-    if type(self)~="Finger" or self==obj then
-        table.insert(t,self)
+function obj.down(...)
+    local param={...}
+    local self=param[1]
+    local t
+    if type(self)~="Finger" then
+        t=param
         self=obj:__call()
+    elseif self==Finger then
+        self=obj:__call()
+        table.remove(param,1)
+        t=param
+    else
+        table.remove(param,1)
+        t=param
     end
+    -- if type(self)~="Finger" or self==obj then
+    --     table.insert(t,self)
+    --     self=obj:__call()
+    -- end
     if self.id==-1 then
         self.id=getFreeFinger()
     end
@@ -244,19 +259,19 @@ end
 -- @param slowlyOnEnd 在滑动快结束的时候额外的线性延迟总时间,毫秒,在滑动最后1/5的步骤或倒数50步时开始减速
 function obj.simpleMove(...)
     local param={...}
-    local self,t,step,delay,slowlyOnEnd
+    local self=param[1]
+    local t,step,delay,slowlyOnEnd
     local simplemode=false
     if type(param[1])~="Finger" then
         simplemode=true
         self=obj.__call()
         t,step,delay,slowlyOnEnd=param[1],param[2] or 4,param[3] or 0,param[4] or 0
+    elseif param[1]==Finger then
+        simplemode=true
+        self=obj.__call()
+        t,step,delay,slowlyOnEnd=param[2],param[3] or 4,param[4] or 0,param[5] or 0
     else
-        if param[1]==obj then
-            self=obj.__call()
-            t,step,delay,slowlyOnEnd=param[2],param[3] or 4,param[4] or 0,param[5] or 0
-        else
-            t,step,delay,slowlyOnEnd=param[1],param[2] or 4,param[3] or 0,param[4] or 0
-        end
+        t,step,delay,slowlyOnEnd=param[2],param[3] or 4,param[4] or 0,param[5] or 0
     end
     if self.id==-1 then
         if type(t)=="Point" then
@@ -304,19 +319,19 @@ end
 -- @param slowlyOnEnd 在滑动快结束的时候额外的线性延迟总时间,毫秒,在滑动最后1/5的步骤或倒数50步时开始减速
 function obj.curveMove(...)
     local param={...}
-    local self,t,speed,delay,slowlyOnEnd
+    local self=param[1]
+    local t,speed,delay,slowlyOnEnd
     local simplemode=false
     if type(param[1])~="Finger" then
         simplemode=true
         self=obj.__call()
         t,speed,delay,slowlyOnEnd=param[1],param[2] or 1,param[3] or 0,param[4] or 0
+    elseif param[1]==Finger then
+        simplemode=true
+        self=obj.__call()
+        t,speed,delay,slowlyOnEnd=param[2],param[3] or 1,param[4] or 0,param[5] or 0
     else
-        if param[1]==obj then
-            self=obj.__call()
-            t,speed,delay,slowlyOnEnd=param[2],param[3] or 1,param[4] or 0,param[5] or 0
-        else
-            t,speed,delay,slowlyOnEnd=param[1],param[2] or 1,param[3] or 0,param[4] or 0
-        end
+        t,speed,delay,slowlyOnEnd=param[2],param[3] or 1,param[4] or 0,param[5] or 0
     end
     if self.id==-1 then
         if type(t)=="Point" then
@@ -432,4 +447,4 @@ function obj._init()
 end
 
 
-return setmetatable({},obj)
+return Finger
