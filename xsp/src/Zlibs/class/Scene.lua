@@ -110,8 +110,6 @@ function obj.run(self)
             timer=Timer(self.name.."_"..os.time().."_"..math.random(0,99999))
         end
         repeat
-            --执行完之后再次检查是否能执行
-            self:run()
             --有子场景则检测一遍子场景是否能触发
             if self.children then
                 local flag=true
@@ -123,10 +121,13 @@ function obj.run(self)
                     end
                 end
             end
+            
             --当没有达到切换时间时候,循环运行
             -- api.mSleep(100)
             --如果有需要的话可以在这里加一个延迟
-        until self.cuttime<=0 or timer:check(self.cuttime)
+            
+            --执行完之后再次检查是否能执行
+        until (self.cuttime<=0 or timer:check(self.cuttime)) and not self:run()
         if self.cuttime>0 then
             --销毁计时器
             timer:distroy()

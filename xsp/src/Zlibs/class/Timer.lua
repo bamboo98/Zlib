@@ -35,7 +35,7 @@ function obj:__tostring()
 end
 function obj:__call(name)
 	if type(name)~="string" then
-		Zlog.fatal("请使用字符串作为序列的名称")
+		Zlog.fatal("请使用字符串作为计时器的名称")
 	end
 	local o=setmetatable({name=name,createtime=api.mTime(),updatetime=api.mTime(),updatecount=0}, obj)
 	AllTimer[name] = o
