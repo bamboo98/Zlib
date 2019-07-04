@@ -255,7 +255,7 @@ function sink.error(err)
         return nil, err
     end
 end
-
+local unpack=table.unpack or unpack
 -- chains a sink with one or several filter(s)
 function sink.chain(f, snk, ...)
     if ... then

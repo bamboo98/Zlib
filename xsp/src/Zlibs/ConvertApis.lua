@@ -49,6 +49,8 @@ end
 
 log=sysLog
 
+local unpack=table.unpack or unpack
+
 function printf(format,...)
 	format=tostring(format)
 	local t={...}

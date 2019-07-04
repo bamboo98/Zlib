@@ -35,7 +35,7 @@ local config={
 
 local data={
     --游戏名(需要填写)
-    gameName="游戏名",
+    gameName="",
     --开发分辨率(需要填写)
     developWidth=1920,
     developHeight=1080,

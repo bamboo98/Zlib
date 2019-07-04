@@ -431,6 +431,8 @@ function obj.tap(...)
     api.mSleep(25)
     f:up()
 end
+local unpack=table.unpack or unpack
+
 --- obj.hold 在某点按住t毫秒
 -- @param ... x,y,t或point,t
 function obj.hold(...)
