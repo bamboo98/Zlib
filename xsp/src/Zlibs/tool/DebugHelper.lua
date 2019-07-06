@@ -50,6 +50,7 @@ end
 local lastCheck = false
 local nowCheck = false
 function mt.checkMemoryUsed()
+	collectgarbage("collect")
 	Zlog.info("当前内存使用:%.3fkb",collectgarbage("count"))
 	local tmpt={}
 	local t1=debug.getregistry()

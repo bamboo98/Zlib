@@ -18,7 +18,7 @@ obj.x = 0
 obj.y = 0
 obj.width = 0
 obj.height = 0
-obj.distroyoyed = false
+obj.destroyoyed = false
 -- 默认变量结束
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
@@ -161,10 +161,10 @@ end
 -- /////////////////////////////////////////
 -- 成员函数
 function obj.get(name) return AllRect[name] end
-function obj.distroy(self)
+function obj.destroy(self)
     if type(self) == "string" then self = obj.get(self) end
     AllRect[self.name] = nil
-    rawset(self, "distroyoyed", true)
+    rawset(self, "destroyoyed", true)
 end
 -- 获取左上角
 function obj.tl(self) return Point(self.x, self.y) end

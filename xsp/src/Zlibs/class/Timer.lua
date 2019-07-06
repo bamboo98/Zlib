@@ -11,7 +11,7 @@ obj.updatetime=-1
 obj.updatecount=0
 obj.enable=false
 
-obj.distroyed=false
+obj.destroyed=false
 --默认变量结束
 --/////////////////////////////////////////
 --/////////////////////////////////////////
@@ -58,12 +58,12 @@ end
 function obj.get(name)
 	return AllTimer[name]
 end
-function obj.distroy(self)
+function obj.destroy(self)
 	if type(self)=="string" then
 		self=obj.get(self)
 	end
 	AllTimer[self.name]=nil
-	rawset(self,"distroyed",true)
+	rawset(self,"destroyed",true)
 end
 function obj.check(self,t,flag)
     if not self.enable then return false end

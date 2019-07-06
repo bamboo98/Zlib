@@ -56,7 +56,7 @@ api.getColor=getfunc("getColor","screen.getColorHex","getColor")
 api.getColorRGB=getfunc("getColorRGB","screen.getColorRGB","getColorRGB")
 --keepscreen(bool)  保持屏幕开关
 api.keepScreen=getfunc("keepScreen","screen.keep","keepScreen")
-api.lua_exit=getfunc("lua_exit","lua_exit")
+api.lua_exit=getfunc("lua_exit","os.exit")
 
 api.getColor=getfunc("getColor","screen.getColor","getColor")
 api.getColorRGB=getfunc("getColorRGB","screen.getColorHex","getColorRGB")

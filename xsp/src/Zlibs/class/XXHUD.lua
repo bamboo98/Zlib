@@ -11,7 +11,7 @@ local AllHUD = {}
 --默认变量
 obj.__tag="HUD"
 obj.name="default"
-obj.distroyoyed=false
+obj.destroyoyed=false
 obj.text='未定义'
 obj.size=10
 obj.color='0xffffff00'
@@ -100,13 +100,13 @@ end
 function obj.get(name)
 	return AllHUD[name]
 end
-function obj.distroy(self)
+function obj.destroy(self)
 	if type(self)=="string" then
 		self=obj.get(self)
     end
     AllHUD[self.name]:hide()
 	AllHUD[self.name]=nil
-	rawset(self,"distroyoyed",true)
+	rawset(self,"destroyoyed",true)
 end
 
 function obj.getID(hud)

@@ -1,5 +1,8 @@
 # Zlibs库  
 ##### Author: 竹子菌  
+##[开发手册(在写了)](https://www.yuque.com/zhuzijun/zlib)
+
+
 ### 类  
 Blackboard 行为控制-黑板 `local Blackboard = require "Zlibs.class.Blackboard"`  
 Circle 圆 `local Circle = require "Zlibs.class.Circle"`  

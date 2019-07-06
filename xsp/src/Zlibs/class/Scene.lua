@@ -130,7 +130,7 @@ function obj.run(self)
         until (self.cuttime<=0 or timer:check(self.cuttime)) and not self:run()
         if self.cuttime>0 then
             --销毁计时器
-            timer:distroy()
+            timer:destroy()
         end
         return true
     end

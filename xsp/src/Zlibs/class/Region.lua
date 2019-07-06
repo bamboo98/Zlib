@@ -13,7 +13,7 @@ obj.__tag="Region"
 obj.name="default"
 obj.area={}
 obj.mode={}
-obj.distroyed=false
+obj.destroyed=false
 --默认变量结束
 --/////////////////////////////////////////
 --/////////////////////////////////////////
@@ -61,7 +61,7 @@ end
 --/////////////////////////////////////////
 --自动变量
 function funcValues.randomPoint(self)
-	if self.distroyed then return Point.INVALID end
+	if self.destroyed then return Point.INVALID end
 	local allowrect
 	for i=1,#self.area do
 		if self.mode[i] then
@@ -116,27 +116,27 @@ end
 function obj.get(name)
 	return allRegion[name]
 end
-function obj.distroy(self)
+function obj.destroy(self)
 	if type(self)=="string" then
 		self=obj.get(self)
 	end
 	allRegion[self.name]=nil
-	rawset(self,"distroyed",true)
+	rawset(self,"destroyed",true)
 end
 function obj.add(self,a)
-	if self.distroyed then return false end
+	if self.destroyed then return false end
 	table.insert(self.area,a)
 	table.insert(self.mode,true)
 	clearupGroup(self)
 end
 function obj.sub(self,a)
-	if self.distroyed then return false end
+	if self.destroyed then return false end
 	table.insert(self.area,a)
 	table.insert(self.mode,false)
 	clearupGroup(self)
 end
 function obj.contains(self,p)
-	if self.distroyed then return false end
+	if self.destroyed then return false end
 	if type(p)~="Point" then
 		Zlog.warn("只支持检测点是否在不规则区域内")
 		return false
