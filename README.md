@@ -1,6 +1,6 @@
 # Zlibs库  
 ##### Author: 竹子菌  
-##[开发手册(在写了)](https://www.yuque.com/zhuzijun/zlib)
+[开发手册(在写了)](https://www.yuque.com/zhuzijun/zlibs)
 
 
 ### 类  
