@@ -9,10 +9,10 @@ log.logLevel(log.level.info)
 local Point = require "Zlibs.class.Point"
 local Size = require "Zlibs.class.Size"
 local Rect = require "Zlibs.class.Rect"
--- 设置Rect类使用的坐标格式为1.9引擎的"x1,y1,x2,y2"
-require"Zlibs.class.Rect".setLocationMode(1)
--- -- 设置Rect类使用的坐标格式为2.0引擎的"x1,y1,width,height"
--- require "Zlibs.class.Rect".setLocationMode(2)
+    -- 设置Rect类使用的坐标格式为1.9引擎的"x1,y1,x2,y2"
+    require"Zlibs.class.Rect".setLocationMode(1)
+    -- -- 设置Rect类使用的坐标格式为2.0引擎的"x1,y1,width,height"
+    -- require "Zlibs.class.Rect".setLocationMode(2)
 local Color = require "Zlibs.class.Color"
 local Circle = require "Zlibs.class.Circle"
 local Region = require "Zlibs.class.Region"

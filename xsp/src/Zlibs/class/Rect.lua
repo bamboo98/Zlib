@@ -39,8 +39,8 @@ function obj:__tostring()
                              self.width, self.height)
     elseif locationMode == 1 then
         return string.format("%s \"%s\" \"%d,%d,%d,%d\"", obj.__tag, self.name,
-                             self.x, self.y, self.x + self.width,
-                             self.y + self.height)
+                             self.x, self.y, self.x + self.width - 1,
+                             self.y + self.height - 1)
     elseif locationMode == 2 then
         return string.format("%s \"%s\" \"%d,%d,%d,%d\"", obj.__tag, self.name,
                              self.x, self.y, self.width, self.height)
@@ -109,8 +109,8 @@ function obj:__call(...)
             elseif locationMode == 1 then
                 o.x = data[1]
                 o.y = data[2]
-                o.width = data[3] - data[1]
-                o.height = data[4] - data[2]
+                o.width = data[3] - data[1] + 1
+                o.height = data[4] - data[2] + 1
             else
                 Zlog.fatal "使用此方法创建Rect前请先设置好坐标类型\r设置代码:  require \"Zlibs.class.Rect\".setLocationMode(1或2)\r1代表采用1.9的坐标,后两位表示右下角点的坐标,即x1,y1,x2,y2\r2代表采用2.0的坐标,后两位表示矩形的大小,即x1,y1,width,height"
             end
@@ -125,14 +125,24 @@ function obj:__call(...)
         elseif #t == 1 and type(t[1]) == "Size" then
             x, y, w, h = 0, 0, t[1].width, t[1].height
         elseif #t == 1 and type(t[1]) == "Point" then
-            x, y, w, h = t[1].x, t[1].y, 0, 0
+            x, y, w, h = t[1].x, t[1].y, 1, 1
         elseif #t == 2 and type(t[1]) == "Point" and type(t[2]) == "Size" then
             x, y, w, h = t[1].x, t[1].y, t[2].width, t[2].height
         elseif #t == 2 and type(t[1]) == "Point" and type(t[2]) == "Point" then
             x, y, w, h = math.min(t[1].x, t[2].x), math.min(t[1].y, t[2].y),
-                         math.abs(t[2].x - t[1].x), math.abs(t[2].y - t[1].y)
+                         math.abs(t[2].x - t[1].x) + 1,
+                         math.abs(t[2].y - t[1].y) + 1
         elseif #t == 4 then
-            x, y, w, h = ...
+            if locationMode == 2 then
+                x, y, w, h = ...
+            elseif locationMode == 1 then
+                x = t[1]
+                y = t[2]
+                w = t[3] - t[1] + 1
+                h = t[4] - t[2] + 1
+            else
+                Zlog.fatal "使用此方法创建Rect前请先设置好坐标类型\r设置代码:  require \"Zlibs.class.Rect\".setLocationMode(1或2)\r1代表采用1.9的坐标,后两位表示右下角点的坐标,即x1,y1,x2,y2\r2代表采用2.0的坐标,后两位表示矩形的大小,即x1,y1,width,height"
+            end
         else
             Zlog.fatal("[%s]创建时参数传入错误", self.__tag)
         end
@@ -147,8 +157,8 @@ end
 -- /////////////////////////////////////////
 -- 自动变量
 function funcValues.randomPoint(self)
-    return Point(math.random(self.x, self.x + self.width),
-                 math.random(self.y, self.y + self.height))
+    return Point(math.random(self.x, self.x + math.max(0, self.width - 1)),
+                 math.random(self.y, self.y + math.max(0, self.height - 1)))
 end
 -- 获取左上角
 function funcValues.tl(self) return Point(self.x, self.y) end
@@ -174,8 +184,8 @@ function funcValues.inCircle(self)
 end
 function funcValues.toString(self)
     if locationMode == 1 then
-        return string.format("%d,%d,%d,%d", self.x, self.y, self.x + self.width,
-                             self.y + self.height)
+        return string.format("%d,%d,%d,%d", self.x, self.y,
+                             self.x + self.width - 1, self.y + self.height - 1)
     elseif locationMode == 2 then
         return string.format("%d,%d,%d,%d", self.x, self.y, self.width,
                              self.height)
@@ -184,7 +194,7 @@ function funcValues.toString(self)
     end
 end
 function funcValues.toTable(self)
-    return {self.x, self.y, self.x + self.width, self.y + self.height}
+    return {self.x, self.y, self.x + self.width - 1, self.y + self.height - 1}
 end
 function funcValues.toNativeRect(self)
     if _G.type(NativeRect) ~= "userdata" then
@@ -217,12 +227,12 @@ end
 -- 是否包含点
 function obj.contains(self, p)
     if type(p) == "Point" then
-        return
-            self.x <= p.x and self.y <= p.y and self.x + self.width >= p.x and
-                self.y + self.height >= p.y
+        return self.x <= p.x and self.y <= p.y and self.x + self.width - 1 >=
+                   p.x and self.y + self.height - 1 >= p.y
     elseif type(p) == "Rect" then
-        return self.x <= p.x and self.y <= p.y and self.x + self.width >= p.x +
-                   p.width and self.y + self.height >= p.y + p.height
+        return self.x <= p.x and self.y <= p.y and self.x + self.width - 1 >=
+                   p.x + p.width - 1 and self.y + self.height - 1 >= p.y +
+                   p.height - 1
     elseif type(p) == "Circle" then
         local c = p.center
         return c.x - self.x >= p.r and c.y - self.y >= p.r and self.x +
@@ -237,8 +247,9 @@ function obj.intersect(self, r) if type(r) == "Rect" then return self - r end en
 -- function obj.center(r) return Point(r.x + r.width / 2, r.y + r.height / 2) end
 -- 矩形是否相交(边与边重合视为相交)
 function obj.isintersect(r1, r2)
-    return r1.x <= r2.x + r2.width and r1.y <= r2.y + r2.height and r1.x +
-               r1.width >= r2.x and r1.y + r1.height >= r2.y
+    return
+        r1.x <= r2.x + r2.width - 1 and r1.y <= r2.y + r2.height - 1 and r1.x +
+            r1.width - 1 >= r2.x and r1.y + r1.height - 1 >= r2.y
 end
 -- -- 获取外接圆
 -- function obj.outCircle(self)
@@ -251,6 +262,7 @@ end
 --     return Circle(self.center, math.min(self.height, self.width) / 2)
 -- end
 function obj.setLocationMode(mode) locationMode = mode end
+function obj.getLocationMode() return locationMode end
 -- function obj.toString(self)
 --     if locationMode == 1 then
 --         return string.format("%d,%d,%d,%d", self.x, self.y, self.x + self.width,
