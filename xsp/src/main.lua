@@ -9,10 +9,10 @@ log.logLevel(log.level.info)
 local Point = require "Zlibs.class.Point"
 local Size = require "Zlibs.class.Size"
 local Rect = require "Zlibs.class.Rect"
-    -- 设置Rect类使用的坐标格式为1.9引擎的"x1,y1,x2,y2"
-    require"Zlibs.class.Rect".setLocationMode(1)
-    -- -- 设置Rect类使用的坐标格式为2.0引擎的"x1,y1,width,height"
-    -- require "Zlibs.class.Rect".setLocationMode(2)
+-- 设置Rect类使用的坐标格式为1.9引擎的"x1,y1,x2,y2"
+require"Zlibs.class.Rect".setLocationMode(1)
+-- -- 设置Rect类使用的坐标格式为2.0引擎的"x1,y1,width,height"
+-- require "Zlibs.class.Rect".setLocationMode(2)
 local Color = require "Zlibs.class.Color"
 local Circle = require "Zlibs.class.Circle"
 local Region = require "Zlibs.class.Region"
@@ -43,20 +43,13 @@ DebugHelper.checkMemoryUsed()
 
 -- 输出结果: ''
 
-local a = Point(100, 100)
-local b = Point(100, 300)
--- 输出结果: 'Point(200 ,400)'
-print(a + b)
--- 输出结果: 'Point(100 ,300)'
-print(a - {90, 200}) -- 向极坐标系90度方向移动200距离
--- 输出结果: '200.0'
-print(a * b) -- 求a和b的距离
--- 输出结果: '90.0'
-print(a / b) -- 求极坐标系中a到b的方向
--- 输出结果: 'Point(0 ,-200)'
-print(a + (-b)) -- 这里的负号是取反,而非减法
--- 输出结果: 'true'
-print(a - {90, 200} == b) -- 比较a在极坐标系90度方向移动200距离后是否与b的坐标相等
+local a = Rect(100, 100, 300, 300)
+local b = Rect(150, 150, 200, 200)
+-- 输出结果: 'a:intersect(b) = Rect(150, 150, 300, 200)'
+printf('a:isintersect(b) = %s', a:isintersect(b))
+
+
+
 
 DebugHelper.checkMemoryUsed()
 

@@ -417,6 +417,9 @@ local function getColorGroup(groupname, count)
                             tonumber(v['area']['y2']) -
                                 tonumber(v['area']['y1']) + 1
                         }
+                else
+                    error(
+                        '请先设置Rect类使用的坐标格式,再获取色组[相关函数Rect.setLocationMode]')
                 end
             elseif tonumber(v['type']) == 3 then
                 -- 色点集处理

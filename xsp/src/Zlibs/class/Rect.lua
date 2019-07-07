@@ -35,8 +35,7 @@ function obj:__index(k)
 end
 function obj:__tostring()
     if self.name == "default" then
-        return string.format("%s(%d ,%d ,%d ,%d)", obj.__tag, self.x, self.y,
-                             self.width, self.height)
+        return string.format("%s(%s)", obj.__tag, self.toString)
     elseif locationMode == 1 then
         return string.format("%s \"%s\" \"%d,%d,%d,%d\"", obj.__tag, self.name,
                              self.x, self.y, self.x + self.width - 1,
@@ -50,9 +49,9 @@ end
 function obj:__add(r)
     local r1tl, r1br = self.tl, self.br
     local r2tl, r2br = r.tl, r.br
-    return obj:__call(math.min(r1tl.x, r2tl.x), math.min(r1tl.y, r2tl.y),
-                      math.max(r1br.x, r2br.x) - math.min(r1tl.x, r2tl.x),
-                      math.max(r1br.y, r2br.y) - math.min(r1tl.y, r2tl.y))
+    return obj:__call(Point(math.min(r1tl.x, r2tl.x), math.min(r1tl.y, r2tl.y)),
+                      Size(math.max(r1br.x, r2br.x) - math.min(r1tl.x, r2tl.x),
+                           math.max(r1br.y, r2br.y) - math.min(r1tl.y, r2tl.y)))
 end
 -- 交集
 function obj:__sub(r)
@@ -60,22 +59,23 @@ function obj:__sub(r)
     local r2tl, r2br = r.tl, r.br
     -- 矩形不相交时返回ZERO
     if not self:isintersect(r) then return obj.ZERO end
-    return obj:__call(math.max(r1tl.x, r2tl.x), math.max(r1tl.y, r2tl.y),
-                      math.min(r1br.x, r2br.x) - math.max(r1tl.x, r2tl.x),
-                      math.min(r1br.y, r2br.y) - math.max(r1tl.y, r2tl.y))
+    return obj:__call(Point(math.max(r1tl.x, r2tl.x), math.max(r1tl.y, r2tl.y)),
+                      Size(math.min(r1br.x, r2br.x) - math.max(r1tl.x, r2tl.x),
+                           math.min(r1br.y, r2br.y) - math.max(r1tl.y, r2tl.y)))
 end
 -- 缩放
 function obj:__mul(n)
     local c = self.center
     local s = self.size
     local as = s * n
-    return obj:__call(math.round(c.x - as.width / 2),
-                      math.round(c.y - as.height / 2), as.width, as.height)
+    return obj:__call(Point(math.round(c.x - as.width / 2),
+                            math.round(c.y - as.height / 2)),
+                      Size(as.width, as.height))
 end
 -- 属性叠加
 function obj:__div(r)
-    return obj:__call(self.x + r.x, self.y + r.y, self.width + r.width,
-                      self.height + r.height)
+    return obj:__call(Point(self.x + r.x, self.y + r.y),
+                      Size(self.width + r.width, self.height + r.height))
 end
 -- 相等
 function obj:__eq(s)
@@ -184,10 +184,10 @@ function funcValues.inCircle(self)
 end
 function funcValues.toString(self)
     if locationMode == 1 then
-        return string.format("%d,%d,%d,%d", self.x, self.y,
+        return string.format("%d, %d, %d, %d", self.x, self.y,
                              self.x + self.width - 1, self.y + self.height - 1)
     elseif locationMode == 2 then
-        return string.format("%d,%d,%d,%d", self.x, self.y, self.width,
+        return string.format("%d, %d, %d, %d", self.x, self.y, self.width,
                              self.height)
     else
         Zlog.fatal "使用此方法创建Rect前请先设置好坐标类型\r设置代码:  require \"Zlibs.class.Rect\".setLocationMode(1或2)\r1代表采用1.9的坐标,后两位表示右下角点的坐标,即x1,y1,x2,y2\r2代表采用2.0的坐标,后两位表示矩形的大小,即x1,y1,width,height"
@@ -277,7 +277,7 @@ function obj.getLocationMode() return locationMode end
 -- function obj.toTable(self)
 --     return {self.x, self.y, self.x + self.width, self.y + self.height}
 -- end
--- function obj.toNativeRect(self)
+-- function obj.toNativeRect(self)  
 --     if _G.type(NativeRect) ~= "userdata" then
 --         Zlog.fatal(
 --             "无法获取全局拓展Rect类,转换失败,这可能是运行引擎版本错误造成的,请尝试更换至2.0或更新版本的引擎再运行,或者开启低版本兼容模式")
@@ -296,7 +296,7 @@ end
 -- /////////////////////////////////////////
 -- 类初始化
 -- rawset(_G,obj.__tag,setmetatable({},obj))
-obj.ZERO = obj:__call(0, 0, 0, 0)
+obj.ZERO = obj:__call(Point(0, 0), Size(0, 0))
 return setmetatable({}, obj)
 -- 类初始化结束
 -- /////////////////////////////////////////
