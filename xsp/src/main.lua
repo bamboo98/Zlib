@@ -43,10 +43,8 @@ DebugHelper.checkMemoryUsed()
 
 -- 输出结果: ''
 
-local a = Rect(100, 100, 300, 300)
-local b = Rect(150, 150, 200, 200)
--- 输出结果: 'a:intersect(b) = Rect(150, 150, 300, 200)'
-printf('a:isintersect(b) = %s', a:isintersect(b))
+local a = Circle(100, 100, 100)
+print(a.randomPoint)
 
 
 
