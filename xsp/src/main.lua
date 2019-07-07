@@ -43,12 +43,22 @@ DebugHelper.checkMemoryUsed()
 
 -- 输出结果: ''
 
-
-
+local a = Point(100, 100)
+local b = Point(100, 300)
+-- 输出结果: 'Point(200 ,400)'
+print(a + b)
+-- 输出结果: 'Point(100 ,300)'
+print(a - {90, 200}) -- 向极坐标系90度方向移动200距离
+-- 输出结果: '200.0'
+print(a * b) -- 求a和b的距离
+-- 输出结果: '90.0'
+print(a / b) -- 求极坐标系中a到b的方向
+-- 输出结果: 'Point(0 ,-200)'
+print(a + (-b)) -- 这里的负号是取反,而非减法
+-- 输出结果: 'true'
+print(a - {90, 200} == b) -- 比较a在极坐标系90度方向移动200距离后是否与b的坐标相等
 
 DebugHelper.checkMemoryUsed()
-
-
 
 -- init("0",0)
 -- local f1=Finger()

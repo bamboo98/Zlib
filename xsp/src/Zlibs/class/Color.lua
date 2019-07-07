@@ -62,6 +62,23 @@ end
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
 -- 自动变量
+function funcValues.toInt(self) return self.r * 0x10000 + self.g * 0x100 + self.b end
+function funcValues.toString(self)
+    return string.format("0x%02x%02x%02x", self.r, self.g, self.b)
+end
+function funcValues.toHSV(self)
+    local R, G, B = self.r, self.g, self.b
+    local max = math.max(R, G, B)
+    local min = math.min(R, G, B)
+    if R == max then H = (G - B) / (max - min) end
+    if G == max then H = 2 + (B - R) / (max - min) end
+    if B == max then H = 4 + (R - G) / (max - min) end
+    H = math.floor((H * 60) + 0.5)
+    if H < 0 then H = H + 360 end
+    V = math.floor((math.max(R, G, B) / 255 * 100) + 0.5)
+    S = math.floor(((max - min) / max * 100) + 0.5)
+    return {H, S, V}
+end
 
 -- 自动变量结束
 -- /////////////////////////////////////////
@@ -72,10 +89,6 @@ end
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
 -- 成员函数
-function obj.toInt(self) return self.r * 0x10000 + self.g * 0x100 + self.b end
-function obj.toString(self)
-    return string.format("0x%02x%02x%02x", self.r, self.g, self.b)
-end
 function obj.match(self, other, fuzz)
     if self == obj.INVALID then return false end
     fuzz = fuzz or 100
@@ -92,19 +105,6 @@ end
 function obj.matchRGBByOffset(self, r, g, b, offset)
     return abs(self.r - r) <= offset.r and abs(self.g - g) <= offset.g and
                abs(self.b - b) <= offset.b
-end
-function obj.toHSV(self)
-    local R, G, B = self.r, self.g, self.b
-    local max = math.max(R, G, B)
-    local min = math.min(R, G, B)
-    if R == max then H = (G - B) / (max - min) end
-    if G == max then H = 2 + (B - R) / (max - min) end
-    if B == max then H = 4 + (R - G) / (max - min) end
-    H = math.floor((H * 60) + 0.5)
-    if H < 0 then H = H + 360 end
-    V = math.floor((math.max(R, G, B) / 255 * 100) + 0.5)
-    S = math.floor(((max - min) / max * 100) + 0.5)
-    return {H, S, V}
 end
 -- 成员函数结束
 -- /////////////////////////////////////////

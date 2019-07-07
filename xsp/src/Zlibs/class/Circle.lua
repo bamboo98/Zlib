@@ -68,7 +68,24 @@ end
 function funcValues.randomPoint(self)
 	local a=math.random(1,36000)/100
 	local d=math.random(0,self.r*100)/100
-	return self:center()-{a,d}
+	return self.center-{a,d}
+end
+--- obj.center 获取圆心,返回Point类
+-- @param self self
+function funcValues.center(self)
+	return Point(self.x,self.y)
+end
+--- obj.outRect 获取外切正方形
+-- @param self self
+function funcValues.outRect(self)
+	local Rect = require "Zlibs.class.Rect"
+	return Rect(self.center,Size(self.r*2))
+end
+--- obj.inRect 获取内切正方形
+-- @param self self
+function funcValues.inRect(self)
+	local Rect = require "Zlibs.class.Rect"
+	return Rect(self.center,Size(self.r*1.14121))
 end
 --自动变量结束
 --/////////////////////////////////////////
@@ -79,39 +96,22 @@ end
 --/////////////////////////////////////////
 --/////////////////////////////////////////
 --成员函数
---- obj.center 获取圆心,返回Point类
--- @param self self
-function obj.center(self)
-	return Point(self.x,self.y)
-end
 --- obj.contains 是否包含某个点/范围/圆,需要完全包括才算,接受重合
 -- @param self self
 -- @param p    Point/Rect/Circle
 function obj.contains(self,p)
 	if type(p)=="Point" then
-		return p * self:center() <= self.r
+		return p * self.center <= self.r
 	elseif type(p)=="Rect" then
 		local l=self.r*self.r
-		local sc=self:center()
+		local sc=self.center
 		return l>=math.abs((sc.x-p.x)*(sc.y-p.y)) and
 			l>=math.abs((sc.x-p.x)*(p.y+p.height-sc.y)) and
 			l>=math.abs((p.x+p.width-sc.x)*(sc.y-p.y)) and
 			l>=math.abs((p.x+p.width-sc.x)*(p.y+p.height-sc.y))
 	elseif type(p)=="Circle" then
-		return self.r>=(self:center()*p:center()+p.r)
+		return self.r>=(self.center*p.center+p.r)
 	end
-end
---- obj.outRect 获取外切正方形
--- @param self self
-function obj.outRect(self)
-	local Rect = require "Zlibs.class.Rect"
-	return Rect(self:center(),Size(self.r*2))
-end
---- obj.inRect 获取内切正方形
--- @param self self
-function obj.inRect(self)
-	local Rect = require "Zlibs.class.Rect"
-	return Rect(self:center(),Size(self.r*1.14121))
 end
 --成员函数结束
 --/////////////////////////////////////////

@@ -67,7 +67,7 @@ if version==1 then
     api.findColor=function(rect,color,degree,hdir,vdir,priority)
         if type(rect)=="string" then rect=rg(rect) end
         if type(color)=="string" then color=sg(color) end
-        local x,y = findColor(rect:toTable(),color.str,degree or 100,hdir or 0,vdir or 0,priority or 0)
+        local x,y = findColor(rect.toTable,color.str,degree or 100,hdir or 0,vdir or 0,priority or 0)
         if x==-1 then return Point.INVALID end
         return Point(x,y)
     end
@@ -143,7 +143,7 @@ if version==1 then
         if type(rect)=="string" then rect=rg(rect) end
         if type(color)=="string" then color=sg(color) end
         local ret = RepairFindColors(
-            rect:toTable(),color.str,
+            rect.toTable,color.str,
             degree or 100,hdir or 0,vdir or 0,priority or 0,limit or 200)
         for i=1,#ret do
             ret[i]=Point(ret[i].x,ret[i].y)
@@ -159,7 +159,7 @@ elseif version==2 then
     api.findColor=function(rect,color,globalFuzz,priority)
         if type(rect)=="string" then rect=rg(rect) end
         if type(color)=="string" then color=sg(color) end
-        local x,y = findColor(rect:toNaiveRect(),color.str,globalFuzz or 100,priority)
+        local x,y = findColor(rect.toNativeRect,color.str,globalFuzz or 100,priority)
         if x==-1 then return Point.INVALID end
         return Point(x,y)
     end
@@ -167,7 +167,7 @@ elseif version==2 then
     api.findColors=function(rect,color,globalFuzz,priority,limit)
         if type(rect)=="string" then rect=rg(rect) end
         if type(color)=="string" then color=sg(color) end
-        local ret = findColors(rect:toNaiveRect(),color.str,globalFuzz or 100,priority,limit)
+        local ret = findColors(rect.toNativeRect,color.str,globalFuzz or 100,priority,limit)
         for i=1,#ret do
             ret[i]=Point(ret[i].x,ret[i].y)
         end

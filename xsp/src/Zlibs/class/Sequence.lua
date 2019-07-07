@@ -28,7 +28,7 @@ obj.destroyed = false
 local function serializePoint(self)
     local points = self.point
     local str = {}
-    for i = 1, #points do str[i] = points[i]:toString() end
+    for i = 1, #points do str[i] = points[i].toString end
     self.str = table.concat(str, ",")
     return self.str
 end

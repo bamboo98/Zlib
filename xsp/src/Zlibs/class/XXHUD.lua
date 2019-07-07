@@ -109,9 +109,6 @@ function obj.destroy(self)
 	rawset(self,"destroyoyed",true)
 end
 
-function obj.getID(hud)
-    return hud.id
-end
 function obj.show(hud,data)
     if type(hud)=='table' then
         hud=obj:__call(hud)

@@ -42,7 +42,7 @@ function obj:__eq(s)
 	return self.width==s.width and self.height==s.height
 end
 function obj:__lt(s)
-	return self.width*self.height < s.width*s.height
+	return self.area < s.area
 end
 
 function obj:__call(...)
@@ -69,6 +69,9 @@ end
 --/////////////////////////////////////////
 --/////////////////////////////////////////
 --自动变量
+function funcValues.area(self)
+	return self.width*self.height
+end
 
 --自动变量结束
 --/////////////////////////////////////////
@@ -79,7 +82,6 @@ end
 --/////////////////////////////////////////
 --/////////////////////////////////////////
 --成员函数
-
 --成员函数结束
 --/////////////////////////////////////////
 --/////////////////////////////////////////

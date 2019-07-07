@@ -9,7 +9,7 @@ local obj = {}
 local funcValues = {}
 local AllRect = {}
 local locationMode = -1
-local naiveRect = rawget(_G, "Rect")
+local NativeRect = rawget(_G, "Rect")
 local api
 -- 默认变量
 obj.__tag = "Rect"
@@ -48,16 +48,16 @@ function obj:__tostring()
 end
 -- 并集
 function obj:__add(r)
-    local r1tl, r1br = self:tl(), self:br()
-    local r2tl, r2br = r:tl(), r:br()
+    local r1tl, r1br = self.tl, self.br
+    local r2tl, r2br = r.tl, r.br
     return obj:__call(math.min(r1tl.x, r2tl.x), math.min(r1tl.y, r2tl.y),
                       math.max(r1br.x, r2br.x) - math.min(r1tl.x, r2tl.x),
                       math.max(r1br.y, r2br.y) - math.min(r1tl.y, r2tl.y))
 end
 -- 交集
 function obj:__sub(r)
-    local r1tl, r1br = self:tl(), self:br()
-    local r2tl, r2br = r:tl(), r:br()
+    local r1tl, r1br = self.tl, self.br
+    local r2tl, r2br = r.tl, r.br
     -- 矩形不相交时返回ZERO
     if not self:isintersect(r) then return obj.ZERO end
     return obj:__call(math.max(r1tl.x, r2tl.x), math.max(r1tl.y, r2tl.y),
@@ -66,8 +66,8 @@ function obj:__sub(r)
 end
 -- 缩放
 function obj:__mul(n)
-    local c = self:center()
-    local s = self:size()
+    local c = self.center
+    local s = self.size
     local as = s * n
     return obj:__call(math.round(c.x - as.width / 2),
                       math.round(c.y - as.height / 2), as.width, as.height)
@@ -150,7 +150,49 @@ function funcValues.randomPoint(self)
     return Point(math.random(self.x, self.x + self.width),
                  math.random(self.y, self.y + self.height))
 end
+-- 获取左上角
+function funcValues.tl(self) return Point(self.x, self.y) end
+-- 获取右下角
+function funcValues.br(self)
+    return Point(self.x + self.width, self.y + self.height)
+end
+-- 获取大小
+function funcValues.size(self) return Size(self.width, self.height) end
+-- 获取中心点
+function funcValues.center(r) return
+    Point(r.x + r.width / 2, r.y + r.height / 2) end
 
+-- 获取外接圆
+function funcValues.outCircle(self)
+    local Circle = require "Zlibs.class.Circle"
+    return Circle(self.center, self.tl)
+end
+-- 获取内接圆
+function funcValues.inCircle(self)
+    local Circle = require "Zlibs.class.Circle"
+    return Circle(self.center, math.min(self.height, self.width) / 2)
+end
+function funcValues.toString(self)
+    if locationMode == 1 then
+        return string.format("%d,%d,%d,%d", self.x, self.y, self.x + self.width,
+                             self.y + self.height)
+    elseif locationMode == 2 then
+        return string.format("%d,%d,%d,%d", self.x, self.y, self.width,
+                             self.height)
+    else
+        Zlog.fatal "使用此方法创建Rect前请先设置好坐标类型\r设置代码:  require \"Zlibs.class.Rect\".setLocationMode(1或2)\r1代表采用1.9的坐标,后两位表示右下角点的坐标,即x1,y1,x2,y2\r2代表采用2.0的坐标,后两位表示矩形的大小,即x1,y1,width,height"
+    end
+end
+function funcValues.toTable(self)
+    return {self.x, self.y, self.x + self.width, self.y + self.height}
+end
+function funcValues.toNativeRect(self)
+    if _G.type(NativeRect) ~= "userdata" then
+        Zlog.fatal(
+            "无法获取全局拓展Rect类,转换失败,这可能是运行引擎版本错误造成的,请尝试更换至2.0或更新版本的引擎再运行,或者开启低版本兼容模式")
+    end
+    return NativeRect(self.x, self.y, self.width, self.height)
+end
 -- 自动变量结束
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
@@ -166,12 +208,12 @@ function obj.destroy(self)
     AllRect[self.name] = nil
     rawset(self, "destroyoyed", true)
 end
--- 获取左上角
-function obj.tl(self) return Point(self.x, self.y) end
--- 获取右下角
-function obj.br(self) return Point(self.x + self.width, self.y + self.height) end
--- 获取大小
-function obj.size(self) return Size(self.width, self.height) end
+-- -- 获取左上角
+-- function obj.tl(self) return Point(self.x, self.y) end
+-- -- 获取右下角
+-- function obj.br(self) return Point(self.x + self.width, self.y + self.height) end
+-- -- 获取大小
+-- function obj.size(self) return Size(self.width, self.height) end
 -- 是否包含点
 function obj.contains(self, p)
     if type(p) == "Point" then
@@ -182,7 +224,7 @@ function obj.contains(self, p)
         return self.x <= p.x and self.y <= p.y and self.x + self.width >= p.x +
                    p.width and self.y + self.height >= p.y + p.height
     elseif type(p) == "Circle" then
-        local c = p:center()
+        local c = p.center
         return c.x - self.x >= p.r and c.y - self.y >= p.r and self.x +
                    self.width - c.x >= p.r and self.y + self.height - c.y >= p.r
     end
@@ -191,45 +233,45 @@ end
 function obj.union(self, r) if type(r) == "Rect" then return self + r end end
 -- 取交集
 function obj.intersect(self, r) if type(r) == "Rect" then return self - r end end
--- 获取中心点
-function obj.center(r) return Point(r.x + r.width / 2, r.y + r.height / 2) end
+-- -- 获取中心点
+-- function obj.center(r) return Point(r.x + r.width / 2, r.y + r.height / 2) end
 -- 矩形是否相交(边与边重合视为相交)
 function obj.isintersect(r1, r2)
     return r1.x <= r2.x + r2.width and r1.y <= r2.y + r2.height and r1.x +
                r1.width >= r2.x and r1.y + r1.height >= r2.y
 end
--- 获取外接圆
-function obj.outCircle(self)
-    local Circle = require "Zlibs.class.Circle"
-    return Circle(self:center(), self:tl())
-end
--- 获取内接圆
-function obj.inCircle(self)
-    local Circle = require "Zlibs.class.Circle"
-    return Circle(self:center(), math.min(self.height, self.width) / 2)
-end
+-- -- 获取外接圆
+-- function obj.outCircle(self)
+--     local Circle = require "Zlibs.class.Circle"
+--     return Circle(self.center, self.tl)
+-- end
+-- -- 获取内接圆
+-- function obj.inCircle(self)
+--     local Circle = require "Zlibs.class.Circle"
+--     return Circle(self.center, math.min(self.height, self.width) / 2)
+-- end
 function obj.setLocationMode(mode) locationMode = mode end
-function obj.toString(self)
-    if locationMode == 1 then
-        return string.format("%d,%d,%d,%d", self.x, self.y, self.x + self.width,
-                             self.y + self.height)
-    elseif locationMode == 2 then
-        return string.format("%d,%d,%d,%d", self.x, self.y, self.width,
-                             self.height)
-    else
-        Zlog.fatal "使用此方法创建Rect前请先设置好坐标类型\r设置代码:  require \"Zlibs.class.Rect\".setLocationMode(1或2)\r1代表采用1.9的坐标,后两位表示右下角点的坐标,即x1,y1,x2,y2\r2代表采用2.0的坐标,后两位表示矩形的大小,即x1,y1,width,height"
-    end
-end
-function obj.toTable(self)
-    return {self.x, self.y, self.x + self.width, self.y + self.height}
-end
-function obj.toNaiveRect(self)
-    if _G.type(naiveRect) ~= "userdata" then
-        Zlog.fatal(
-            "无法获取全局拓展Rect类,转换失败,这可能是运行引擎版本错误造成的,请尝试更换至2.0或更新版本的引擎再运行,或者开启低版本兼容模式")
-    end
-    return naiveRect(self.x, self.y, self.width, self.height)
-end
+-- function obj.toString(self)
+--     if locationMode == 1 then
+--         return string.format("%d,%d,%d,%d", self.x, self.y, self.x + self.width,
+--                              self.y + self.height)
+--     elseif locationMode == 2 then
+--         return string.format("%d,%d,%d,%d", self.x, self.y, self.width,
+--                              self.height)
+--     else
+--         Zlog.fatal "使用此方法创建Rect前请先设置好坐标类型\r设置代码:  require \"Zlibs.class.Rect\".setLocationMode(1或2)\r1代表采用1.9的坐标,后两位表示右下角点的坐标,即x1,y1,x2,y2\r2代表采用2.0的坐标,后两位表示矩形的大小,即x1,y1,width,height"
+--     end
+-- end
+-- function obj.toTable(self)
+--     return {self.x, self.y, self.x + self.width, self.y + self.height}
+-- end
+-- function obj.toNativeRect(self)
+--     if _G.type(NativeRect) ~= "userdata" then
+--         Zlog.fatal(
+--             "无法获取全局拓展Rect类,转换失败,这可能是运行引擎版本错误造成的,请尝试更换至2.0或更新版本的引擎再运行,或者开启低版本兼容模式")
+--     end
+--     return NativeRect(self.x, self.y, self.width, self.height)
+-- end
 
 -- 类初始化函数,因为会循环引用,所以需要单独用函数初始化
 function obj._init()

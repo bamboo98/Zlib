@@ -69,7 +69,7 @@ function funcValues.randomPoint(self)
 			if type(self.area[i]) == "Rect" then
 				r=Rect(self.mode[i])
 			elseif type(self.area[i]) == "Circle" then
-				r=self.area[i]:outRect()
+				r=self.area[i].outRect
 			elseif type(self.area[i]) == "Point" then
 				r=Rect(self.area[i],Size.ZERO)
 			end

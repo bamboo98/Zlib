@@ -39,9 +39,9 @@ function obj:__tostring()
         return string.format("%s \"%s\" \"%d|%d%s%s%s\"", obj.__tag, self.name,
                              self.x, self.y,
                              self.color ~= Color.INVALID and "|" ..
-                                 self.color:toString() or "",
+                                 self.color.toString or "",
                              self.color ~= Color.INVALID and self.offset ~=
-                                 Color.INVALID and "-" .. self.offset:toString() or
+                                 Color.INVALID and "-" .. self.offset.toString or
                                  "", self.fuzz and "|" .. self.fuzz or "")
     end
 end
@@ -116,7 +116,7 @@ function obj:__call(...)
             o.offset = t[1].offset
             o.fuzz = t[1].fuzz
         elseif #t == 1 and type(t[1]) == "Rect" then
-            return t[1]:center()
+            return t[1].center
         elseif #t == 2 then
             x, y = math.round(t[1]), math.round(t[2])
         else
@@ -130,8 +130,22 @@ end
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
 -- 自动变量
-function funcValues.randomPoint(self) return obj:__call(self) end
+function funcValues.randomPoint(self) return obj:__call(self.x, self.y) end
 function funcValues.pos(self) return obj:__call(self.x, self.y) end
+function funcValues.center(self) return obj:__call(self.x, self.y) end
+function funcValues.toString(self)
+    if self.color == Color.INVALID then
+        return string.format("%d,%d", self.x, self.y)
+    else
+        return string.format("%d|%d%s%s%s", self.x, self.y, self.color ~=
+                                 Color.INVALID and "|" .. self.color.toString or
+                                 "",
+                             self.color ~= Color.INVALID and self.offset ~=
+                                 Color.INVALID and "-" .. self.offset.toString or
+                                 "", self.fuzz and "|" .. self.fuzz or "")
+    end
+end
+function funcValues.getColor(self) return Color(api.getColorRGB(self.x, self.y)) end
 -- 自动变量结束
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
@@ -141,28 +155,15 @@ function funcValues.pos(self) return obj:__call(self.x, self.y) end
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
 -- 成员函数
-function obj.center(self) return obj:__call(self) end
 function obj.contains(self, p)
     if type(p) ~= "Point" then return false end
-    return self == p:center()
+    return self == p.center
 end
 function obj.get(name) return AllPoint[name] end
 function obj.destroy(self)
     if type(self) == "string" then self = obj.get(self) end
     AllPoint[self.name] = nil
     rawset(self, "destroyoyed", true)
-end
-function obj.toString(self)
-    if self.color == Color.INVALID then
-        return string.format("%d,%d", self.x, self.y)
-    else
-        return string.format("%d|%d%s%s%s", self.x, self.y, self.color ~=
-                                 Color.INVALID and "|" .. self.color:toString() or
-                                 "",
-                             self.color ~= Color.INVALID and self.offset ~=
-                                 Color.INVALID and "-" .. self.offset:toString() or
-                                 "", self.fuzz and "|" .. self.fuzz or "")
-    end
 end
 function obj.match(self, fuzz)
     if self.color == Color.INVALID then return false end
@@ -173,7 +174,6 @@ function obj.match(self, fuzz)
         return self.color:matchRGBByOffset(r, g, b, self.offset)
     end
 end
-function obj.getColor(self) return Color(api.getColorRGB(self.x, self.y)) end
 
 function obj.tap(self) Finger.tap(self) end
 
