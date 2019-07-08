@@ -679,7 +679,12 @@ local function multipartSend(url, content)
     -- var_dump(status)
     -- var_dump(response_body)
     -- 如果没有请求成功,返回false
-    return response_body and response_body[1] or false
+    if code == 200 then
+        return response_body[1]
+    else
+        Zlog.error("HTTP错误: %s", status)
+        return ""
+    end
 end
 
 return {
