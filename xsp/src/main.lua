@@ -33,7 +33,14 @@ DebugHelper.checkMemoryUsed()
 -- print(Rect.get "测试区域",Rect.get "测试区域2")
 
 -- Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"
-
+-- print(Sequence.get "序列1")
+-- Sequence "序列2"{
+--     {pos = Point(0, 0), color = 0x181F85},
+--     {pos = Point(29, 1), color = 0x00BBFE, fuzz = 90},
+--     {pos = Point(103, -4), color = 0x0B6BBE, offset = 0x050505},
+--     {pos = Point(65, 9), color = 0x150972}
+-- }
+-- print(Sequence.get "序列2")
 -- print(Sequence.get "序列1")
 -- print(Sequence.get "序列1"[2])
 
@@ -42,12 +49,19 @@ DebugHelper.checkMemoryUsed()
 -- ZY.init()--具体参数进入文件Zlibs.tool.ZY.lua中设置,自带叉叉init函数的调用
 
 -- 输出结果: ''
+DebugHelper.checkMemoryUsed()
 
-local a = Circle(100, 100, 100)
-print(a.randomPoint)
-
-
-
+Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"
+-- 输出结果: 'Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"'
+print(Sequence.get "序列1")
+Sequence "序列2"{
+    {pos = Point(0, 0), color = 0x181F85},
+    {pos = Point(29, 1), color = 0x00BBFE, fuzz = 90},
+    {pos = Point(103, -4), color = 0x0B6BBE, offset = 0x050505},
+    {pos = Point(65, 9), color = 0x150972}
+}
+-- 输出结果: 'Sequence "序列2" "0|0|0x181f85,29|1|0x00bbfe|90,103|-4|0x0b6bbe-0x050505,65|9|0x150972"'
+print(Sequence.get "序列2")
 
 DebugHelper.checkMemoryUsed()
 

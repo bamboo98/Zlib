@@ -36,27 +36,9 @@ function mt.showGlobalValues()
 	print("[%d]Function List:%s",#func,table.concat(func,", "))
 	print("[%d]Others:%s",#oth,table.concat(oth,", "))
 end
-local function analyzeTable(t)
-	local ret={}
-	for k,v in pairs(t) do
-		if type(v)=="table" then
-			ret[k]=analyzeTable(v)
-		else
-			ret[k]=true
-		end
-	end
-	return ret
-end
-local lastCheck = false
-local nowCheck = false
 function mt.checkMemoryUsed()
 	collectgarbage("collect")
 	Zlog.info("当前内存使用:%.3fkb",collectgarbage("count"))
-	local tmpt={}
-	local t1=debug.getregistry()
-
-	
-
 end
 
 

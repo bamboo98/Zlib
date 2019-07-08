@@ -68,6 +68,7 @@ end
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
 -- 自动变量
+function funcValues.toString(self) return self.str end
 
 -- 自动变量结束
 -- /////////////////////////////////////////
@@ -76,13 +77,11 @@ end
 function obj.get(name) return AllSequence[name] end
 function obj.destroy(self)
     if type(self) == "string" then self = obj.get(self) end
+    self:del()
     AllSequence[self.name] = nil
     rawset(self, "destroyed", true)
 end
-function obj.toString(self)
-    serializePoint(self)
-    return self.str
-end
+function obj.serialize(self) return serializePoint(self) end
 function obj.del(self)
     for k, v in ipairs(self.point) do v:destroy() end
     self.point = {}
@@ -94,18 +93,16 @@ function obj.add(self, p)
         Zlog.fatal(
             "参数传入错误,请传入table或string格式的颜色序列")
     end
-    local index = #self.point + 1
-    for k, v in ipairs(p) do
-        local pos = Point("[AUTO]_" .. self.name .. "_" .. index)(v)
+    for _, v in ipairs(p) do
+        local pos = Point(v, 987654)
         table.insert(self.point, pos)
-        index = #self.point + 1
     end
     serializePoint(self)
     return self
 end
 function obj.match(self, fuzz)
     for _, v in ipairs(self.point) do
-        if not v:match(fuzz) then return false end
+        if not v:match(fuzz or 100) then return false end
     end
     return true
 end
@@ -113,44 +110,56 @@ if version == 1 then
     obj.findInRect = function(self, rect, degree, hdir, vdir, priority)
         return api.findColor(rect, self, degree, hdir, vdir, priority)
     end
-    obj.multiFindInRect = function(self, rect, degree, hdir, vdir, priority,
+    obj.findMultiInRect = function(self, rect, degree, hdir, vdir, priority,
                                    limit)
         return api.findColors(rect, self, degree, hdir, vdir, priority, limit)
     end
-    obj.findInRange = function(self, range, degree)
-        return api.findColor(Rect(self.point[1] + Point(-range.x,-range.y), self.point[1] + range),
-                             self, degree)
+    obj.findInRange = function(self, range, degree, hdir, vdir, priority)
+        return api.findColor(Rect(self.point[1] + (-range),
+                                  self.point[1] + range), self, degree, hdir,
+                             vdir, priority)
     end
-    obj.findInRangeTap = function(self, range, degree)
-        local p = api.findColor(Rect(self.point[1] + Point(-range.x,-range.y),
-                                     self.point[1] + range), self, degree)
+    obj.findInRangeTap = function(self, range, degree, hdir, vdir, priority)
+        local p = api.findColor(Rect(self.point[1] + (-range),
+                                     self.point[1] + range), self, degree, hdir,
+                                vdir, priority)
         if p ~= Point.INVALID then
             p:tap()
-            return true
         end
-        return false
+        return p
+    end
+    obj.findMultiInRange = function(self, range, degree, hdir, vdir, priority,
+                                    limit)
+        return api.findColors(Rect(self.point[1] + (-range),
+                                   self.point[1] + range), self, degree, hdir,
+                              vdir, priority, limit)
     end
 
 elseif version == 2 then
     obj.findInRect = function(self, rect, globalFuzz, priority)
         return api.findColor(rect, self, globalFuzz, priority)
     end
-    obj.multiFindInRect = function(self, rect, globalFuzz, priority, limit)
+    obj.findMultiInRect = function(self, rect, globalFuzz, priority, limit)
         return api.findColors(rect, self, globalFuzz, priority, limit)
     end
-    obj.findInRange = function(self, range, globalFuzz)
-        return api.findColor(Rect(self.point[1] + Point(-range.x,-range.y), self.point[1] + range),
-                             self, globalFuzz)
+    obj.findInRange = function(self, range, globalFuzz, priority)
+        return api.findColor(Rect(self.point[1] + (-range),
+                                  self.point[1] + range), self, globalFuzz,
+                             priority)
     end
-    obj.findInRangeTap = function(self, range, globalFuzz)
-        local p = api.findColor(Rect(self.point[1] + Point(-range.x,-range.y),
-                                     self.point[1] + range), self, globalFuzz)
+    obj.findInRangeTap = function(self, range, globalFuzz, priority)
+        local p = api.findColor(Rect(self.point[1] + (-range),
+                                     self.point[1] + range), self, globalFuzz,
+                                priority)
         if p ~= Point.INVALID then
             p:tap()
-            return true
         end
-        return false
-
+        return p
+    end
+    obj.findMultiInRange = function(self, range, globalFuzz, priority, limit)
+        return api.findColors(Rect(self.point[1] + (-range),
+                                   self.point[1] + range), self, globalFuzz,
+                              priority, limit)
     end
 end
 function obj.tap(self) if self.point[1] then self.point[1]:tap() end end

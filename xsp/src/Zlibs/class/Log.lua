@@ -190,7 +190,7 @@ function obj.fatal(s,...)
 			f:write(s.."\r\n")
 		end
 		obj.logcount=obj.logcount+1
-		error(string.format("%s",s))
+		error(s)
 	end
 end
 --成员函数结束

@@ -34,7 +34,17 @@ function obj:__index(k)
 end
 function obj:__tostring()
     if self.name == "default" then
-        return string.format("%s(%d ,%d)", obj.__tag, self.x, self.y)
+        if self.color == Color.INVALID then
+            return string.format("%s(%d ,%d)", obj.__tag, self.x, self.y)
+        else
+            return string.format("%s '%d|%d%s%s%s'", obj.__tag, self.x, self.y,
+                                 self.color ~= Color.INVALID and "|" ..
+                                     self.color.toString or "",
+                                 self.color ~= Color.INVALID and self.offset ~=
+                                     Color.INVALID and "-" ..
+                                     self.offset.toString or "",
+                                 self.fuzz and "|" .. self.fuzz or "")
+        end
     else
         return string.format("%s \"%s\" \"%d|%d%s%s%s\"", obj.__tag, self.name,
                              self.x, self.y,
@@ -111,12 +121,33 @@ function obj:__call(...)
             x, y = 0, 0
         elseif #t == 1 and type(t[1]) == "Point" then
             x, y = t[1].x, t[1].y
-            --o.name = t[1].name
+            -- o.name = t[1].name
             o.color = t[1].color
             o.offset = t[1].offset
             o.fuzz = t[1].fuzz
         elseif #t == 1 and type(t[1]) == "Rect" then
             return t[1].center
+        elseif #t == 2 and type(t[1]) == "string" and t[2] == 987654 then
+            local data = string.split(t[1], "|")
+            x = tonumber(data[1] or -1)
+            y = tonumber(data[2] or -1)
+            local c = string.split(data[3] or "", "-")
+            o.color = c[1] ~= "" and Color(tonumber(c[1])) or Color.INVALID
+            o.offset = c[2] and Color(tonumber(c[2])) or Color.INVALID
+            o.fuzz = data[4] and tonumber(data[4])
+        elseif #t == 2 and type(t[1]) == "table" and t[2] == 987654 then
+            local data = t[1]
+            x =
+                data.pos and data.pos.x or tonumber(data[1]) or tonumber(data.x) or
+                    -1
+            y =
+                data.pos and data.pos.y or tonumber(data[2]) or tonumber(data.y) or
+                    -1
+            o.color = data.color and Color(tonumber(data.color)) or
+                          Color.INVALID
+            o.offset = data.offset and Color(tonumber(data.offset)) or
+                           Color.INVALID
+            o.fuzz = data.fuzz and tonumber(data.fuzz)
         elseif #t == 2 then
             x, y = math.round(t[1]), math.round(t[2])
         else
