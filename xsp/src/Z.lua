@@ -6,7 +6,7 @@ QQ: 454689880
 Updated: 2019年5月4日22:11:08
 Project: https://github.com/bamboo98/Zlib
 ]]
-
+local init = false
 function Z.getJson()
     -- 尝试直接加载2.0的json库
     local ok, json = pcall(require, 'cjson')
@@ -21,6 +21,8 @@ function Z.getJson()
 end
 
 function Z.init()
+    if init then return end
+    init = true
     local log = rawget(_G, "sysLog")
     print = log and function(...)
         local t = {...}

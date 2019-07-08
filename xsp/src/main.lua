@@ -1,26 +1,35 @@
-math.randomseed(os.time())
--- init("0",1)
-
-require"Z".init()
+--require"Z".init()
 
 local DebugHelper = require "Zlibs.tool.DebugHelper"
-local log = require "Zlibs.class.Log"
-log.logLevel(log.level.info)
+local Zlog = require "Zlibs.class.Log"
+Zlog.logLevel(Zlog.level.info)
+Zlog.info('日志模块加载成功')
 local Point = require "Zlibs.class.Point"
+Zlog.info(Point(300, 300))
 local Size = require "Zlibs.class.Size"
+Zlog.info(Size(300, 300))
 local Rect = require "Zlibs.class.Rect"
 -- 设置Rect类使用的坐标格式为1.9引擎的"x1,y1,x2,y2"
 require"Zlibs.class.Rect".setLocationMode(1)
+Zlog.info(Rect(0, 0, 300, 300))
 -- -- 设置Rect类使用的坐标格式为2.0引擎的"x1,y1,width,height"
 -- require "Zlibs.class.Rect".setLocationMode(2)
 local Color = require "Zlibs.class.Color"
-local Circle = require "Zlibs.class.Circle"
-local Region = require "Zlibs.class.Region"
+Zlog.info(Color(0x33ccff))
 local Sequence = require "Zlibs.class.Sequence"
-local Finger = require "Zlibs.class.Finger"
-local string = require "Zlibs.class.string"
-
+Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"
+Zlog.info(Sequence.get "序列1")
 DebugHelper.checkMemoryUsed()
+--[[ 输出结果 :
+[0] Info: 日志模块加载成功
+[0] Info: Point(300 ,300)
+[0] Info: Size(300 ,300)
+[0] Info: Rect(0, 0, 300, 300)
+[0] Info: Color(51 ,204 ,255)
+[0] Info: Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"
+[0] Info: 当前内存使用:168.163kb
+--]]
+
 -- local http = require "Zlibs.class.Http"
 
 -- local bb=require "Zlibs.class.BlackBoard"
@@ -49,21 +58,21 @@ DebugHelper.checkMemoryUsed()
 -- ZY.init()--具体参数进入文件Zlibs.tool.ZY.lua中设置,自带叉叉init函数的调用
 
 -- 输出结果: ''
-DebugHelper.checkMemoryUsed()
+-- DebugHelper.checkMemoryUsed()
 
-Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"
--- 输出结果: 'Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"'
-print(Sequence.get "序列1")
-Sequence "序列2"{
-    {pos = Point(0, 0), color = 0x181F85},
-    {pos = Point(29, 1), color = 0x00BBFE, fuzz = 90},
-    {pos = Point(103, -4), color = 0x0B6BBE, offset = 0x050505},
-    {pos = Point(65, 9), color = 0x150972}
-}
--- 输出结果: 'Sequence "序列2" "0|0|0x181f85,29|1|0x00bbfe|90,103|-4|0x0b6bbe-0x050505,65|9|0x150972"'
-print(Sequence.get "序列2")
+-- Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"
+-- -- 输出结果: 'Sequence "序列1" "100|100|0x3366ff-0x010101,120|101|0x3366ff|95,130|120|0x3366ff-0x010101,80|20|0xffffff|85"'
+-- print(Sequence.get "序列1")
+-- Sequence "序列2"{
+--     {pos = Point(0, 0), color = 0x181F85},
+--     {pos = Point(29, 1), color = 0x00BBFE, fuzz = 90},
+--     {pos = Point(103, -4), color = 0x0B6BBE, offset = 0x050505},
+--     {pos = Point(65, 9), color = 0x150972}
+-- }
+-- -- 输出结果: 'Sequence "序列2" "0|0|0x181f85,29|1|0x00bbfe|90,103|-4|0x0b6bbe-0x050505,65|9|0x150972"'
+-- print(Sequence.get "序列2")
 
-DebugHelper.checkMemoryUsed()
+-- DebugHelper.checkMemoryUsed()
 
 -- init("0",0)
 -- local f1=Finger()
