@@ -37,6 +37,12 @@ function Z.init()
     require"Zlibs.class.Sequence"._init()
     require"Zlibs.class.Finger"._init()
 end
+function Z.MD5(s)
+    local md5func = rawget(_G, 'md5') or rawget(_G, 'md5_fast') or
+                        require'crypto'.md5
+    return md5func(s)
+end
+
 local type = require 'Zlibs.tool.type'
 function var_dump(val)
     local function dump(val, deep)
