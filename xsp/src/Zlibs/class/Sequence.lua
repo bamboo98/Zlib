@@ -85,7 +85,8 @@ function obj.serialize(self) return serializePoint(self) end
 function obj.del(self)
     for k, v in ipairs(self.point) do v:destroy() end
     self.point = {}
-    serializePoint(self)
+    self:serialize()
+    -- serializePoint(self)
 end
 function obj.add(self, p)
     if type(p) == "string" then p = string.split(p, ",") end
@@ -97,7 +98,8 @@ function obj.add(self, p)
         local pos = Point(v, 987654)
         table.insert(self.point, pos)
     end
-    serializePoint(self)
+    self:serialize()
+    -- serializePoint(self)
     return self
 end
 function obj.match(self, fuzz)
@@ -123,9 +125,7 @@ if version == 1 then
         local p = api.findColor(Rect(self.point[1] + (-range),
                                      self.point[1] + range), self, degree, hdir,
                                 vdir, priority)
-        if p ~= Point.INVALID then
-            p:tap()
-        end
+        if p ~= Point.INVALID then p:tap() end
         return p
     end
     obj.findMultiInRange = function(self, range, degree, hdir, vdir, priority,
@@ -151,9 +151,7 @@ elseif version == 2 then
         local p = api.findColor(Rect(self.point[1] + (-range),
                                      self.point[1] + range), self, globalFuzz,
                                 priority)
-        if p ~= Point.INVALID then
-            p:tap()
-        end
+        if p ~= Point.INVALID then p:tap() end
         return p
     end
     obj.findMultiInRange = function(self, range, globalFuzz, priority, limit)

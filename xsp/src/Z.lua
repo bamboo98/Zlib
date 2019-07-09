@@ -1,10 +1,14 @@
 local Z = {}
+local config = {['启用插件'] = false}
+
 Z.info = [[
-Version: 0.1.0
 Author: 竹子菌
 QQ: 454689880
-Updated: 2019年5月4日22:11:08
-Project: https://github.com/bamboo98/Zlib
+Updated: 2019年7月9日21:36:48
+Project: https://github.com/bamboo98/Zlibs
+开发手册: https://www.yuque.com/zhuzijun/zlibs
+请关注github获取最新版更新,Zlibs仍在开发中
+可能会出现各种不可预知的错误,如果发现BUG请反馈给竹子菌
 ]]
 local init = false
 function Z.getJson()
@@ -36,7 +40,8 @@ function Z.init()
     require"Zlibs.class.Rect"._init()
     require"Zlibs.class.Sequence"._init()
     require"Zlibs.class.Finger"._init()
-    pcall(require, 'Zlibs.plugins.init')
+    printf('Zlibs加载成功\r%s',Z.info)
+    if config['启用插件'] then pcall(require, 'Zlibs.plugins.init') end
 end
 function Z.MD5(s)
     local md5func = rawget(_G, 'md5') or rawget(_G, 'md5_fast') or
