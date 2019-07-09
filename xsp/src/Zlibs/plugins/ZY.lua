@@ -464,4 +464,4 @@ local function getColorGroup(groupname, count)
     end
 end
 
-return {init = ZY_init, getCG = getColorGroup, CP = ConvertPoint}
+require'Z'.ZY = {init = ZY_init, getCG = getColorGroup, CP = ConvertPoint}
