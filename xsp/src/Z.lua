@@ -36,6 +36,7 @@ function Z.init()
     require"Zlibs.class.Rect"._init()
     require"Zlibs.class.Sequence"._init()
     require"Zlibs.class.Finger"._init()
+    pcall(require, 'Zlibs.plugins.init')
 end
 function Z.MD5(s)
     local md5func = rawget(_G, 'md5') or rawget(_G, 'md5_fast') or
