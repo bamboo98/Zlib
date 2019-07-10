@@ -62,21 +62,33 @@ end
 -- /////////////////////////////////////////
 -- /////////////////////////////////////////
 -- 自动变量
-function funcValues.toInt(self) return self.r * 0x10000 + self.g * 0x100 + self.b end
+function funcValues.toInt(self) return self.r * 0x10000 + self.g * 0x100 +
+                                           self.b end
 function funcValues.toString(self)
     return string.format("0x%02x%02x%02x", self.r, self.g, self.b)
 end
 function funcValues.toHSV(self)
     local R, G, B = self.r, self.g, self.b
-    local max = math.max(R, G, B)
-    local min = math.min(R, G, B)
-    if R == max then H = (G - B) / (max - min) end
-    if G == max then H = 2 + (B - R) / (max - min) end
-    if B == max then H = 4 + (R - G) / (max - min) end
-    H = math.floor((H * 60) + 0.5)
+    local r1, g1, b1 = R / 255, G / 255, B / 255
+    local H, S, V
+    local max = math.max(r1, g1, b1)
+    local min = math.min(r1, g1, b1)
+    local delta = max - min
+    if max == min then
+        H = 0
+    else
+        if r1 == max then H = ((g1 - b1) / delta) % 6 end
+        if g1 == max then H = 2 + (b1 - r1) / delta end
+        if b1 == max then H = 4 + (r1 - g1) / delta end
+    end
+    H = math.round(H * 60)
     if H < 0 then H = H + 360 end
-    V = math.floor((math.max(R, G, B) / 255 * 100) + 0.5)
-    S = math.floor(((max - min) / max * 100) + 0.5)
+    V = math.round(max * 100)
+    if max == 0 then
+        S = 0
+    else
+        S = math.round(delta / max * 100)
+    end
     return {H, S, V}
 end
 

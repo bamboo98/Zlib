@@ -1,4 +1,4 @@
---require"Z".init()
+require"Z".init()
 
 local DebugHelper = require "Zlibs.tool.DebugHelper"
 local Zlog = require "Zlibs.class.Log"
