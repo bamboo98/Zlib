@@ -282,6 +282,7 @@ setmetatable(Rect, {
 	__call = function(self, ...)
 	local t={...}
 	local width,height
+	local x,y
 	if #t==0 then
 		x,y,width,height=0,0,0,0
 		elseif #t==1 and type(t[1])=="table" and tostring(t[1].__tag)=="Rect" then
@@ -782,7 +783,7 @@ function Constscreens.setMockMode(mode)
 end
 
 function Constscreens.setMockTransform(transform)
-	if type(mode)~="function" then error("setMockTransform函数传入参数错误") end
+	if type(transform)~="function" then error("setMockTransform函数传入参数错误") end
 	Constscreens.Transform=transform
 end
 

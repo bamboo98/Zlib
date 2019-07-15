@@ -1,5 +1,39 @@
 local Z = {}
-local config = {['启用插件'] = false}
+local config = {
+    -- 需要加载的插件列表,会按添加顺序从前往后加载
+    PluginList = {
+        {
+            -- 是否启用该插件
+            enable = false,
+            -- 插件名
+            name = "竹云平台对接",
+            -- 插件入口文件,相对plugins文件夹
+            entry = 'ZY',
+            -- 在Z.lua中添加唯一索引,防止重复加载/加载冲突
+            addIndex = 'ZY',
+            -- 插件设置,会在初始化时自动传入
+            config = {}
+        }, {
+            enable = true,
+            name = "HSV颜色支持",
+            entry = 'HSVColor',
+            addIndex = 'HSVColor',
+            config = {}
+        }, {
+            enable = false,
+            name = "全分辨率找色函数",
+            entry = 'ExtraFindColor',
+            addIndex = 'ExtraFindColor',
+            config = {
+                init = 1, -- 脚本init的方向(0竖屏,1横屏)
+                width = 1920, -- 开发分辨率的宽
+                height = 1080, -- 开发分辨率的高
+                safeSpace = 10 -- 自动转换预留的间隙(开发分辨率下)
+            }
+        }
+    }
+
+}
 
 Z.info = [[
 Author: 竹子菌
@@ -10,6 +44,7 @@ Project: https://github.com/bamboo98/Zlibs
 请关注github获取最新版更新,Zlibs仍在开发中
 可能会出现各种不可预知的错误,如果发现BUG请反馈给竹子菌
 ]]
+Z.config = config
 local init = false
 function Z.getJson()
     -- 尝试直接加载2.0的json库
@@ -40,8 +75,8 @@ function Z.init()
     require"Zlibs.class.Rect"._init()
     require"Zlibs.class.Sequence"._init()
     require"Zlibs.class.Finger"._init()
-    printf('Zlibs加载成功\r%s',Z.info)
-    if config['启用插件'] then pcall(require, 'Zlibs.plugins.init') end
+    printf('Zlibs加载成功\r%s', Z.info)
+    if #(config.PluginList) > 0 then pcall(require, 'Zlibs.plugins.init') end
 end
 function Z.MD5(s)
     local md5func = rawget(_G, 'md5') or rawget(_G, 'md5_fast') or
