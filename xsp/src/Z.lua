@@ -38,7 +38,7 @@ local config = {
 Z.info = [[
 Author: 竹子菌
 QQ: 454689880
-Updated: 2019年7月9日21:36:48
+Updated: 2019年7月15日16:37:19
 Project: https://github.com/bamboo98/Zlibs
 开发手册: https://www.yuque.com/zhuzijun/zlibs
 请关注github获取最新版更新,Zlibs仍在开发中
