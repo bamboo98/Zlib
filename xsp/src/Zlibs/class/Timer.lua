@@ -3,6 +3,8 @@ local api = require "Zlibs.class.api"
 local obj={}
 local funcValues={}
 local AllTimer={}
+-- 魔术变量接口_插件用
+obj._magicValues = funcValues
 --默认变量
 obj.__tag="Timer"
 obj.name="default"

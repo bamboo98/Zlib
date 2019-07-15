@@ -5,6 +5,8 @@ local obj = {}
 local funcValues = {}
 local abs = math.abs
 
+-- 魔术变量接口_插件用
+obj._magicValues = funcValues
 -- 默认变量
 obj.__tag = "Color"
 obj.r = 0

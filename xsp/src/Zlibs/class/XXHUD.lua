@@ -7,6 +7,8 @@ local string = require "Zlibs.class.string"
 local obj = {}
 local funcValues = {}
 local AllHUD = {}
+-- 魔术变量接口_插件用
+obj._magicValues = funcValues
 -- 默认变量
 obj.__tag = "XXHUD"
 obj.name = "default"

@@ -13,6 +13,8 @@ local api
 -- version 1:1.9引擎 2:2.0引擎
 local version = 1
 if table.unpack then version = 2 end
+-- 魔术变量接口_插件用
+obj._magicValues = funcValues
 -- 默认变量
 obj.__tag = "Sequence"
 obj.name = "default"

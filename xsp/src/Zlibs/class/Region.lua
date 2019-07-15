@@ -8,6 +8,8 @@ local type = require "Zlibs.tool.type"
 local obj={}
 local funcValues={}
 local allRegion={}
+-- 魔术变量接口_插件用
+obj._magicValues = funcValues
 --默认变量
 obj.__tag="Region"
 obj.name="default"

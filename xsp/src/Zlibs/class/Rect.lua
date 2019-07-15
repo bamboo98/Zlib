@@ -11,6 +11,8 @@ local AllRect = {}
 local locationMode = -1
 local NativeRect = rawget(_G, "Rect")
 local api
+-- 魔术变量接口_插件用
+obj._magicValues = funcValues
 -- 默认变量
 obj.__tag = "Rect"
 obj.name = "default"
