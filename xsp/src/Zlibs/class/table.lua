@@ -12,7 +12,7 @@ function mt.concat(t, s)
 end
 --- mt.deepcopy 深度拷贝
 -- @param obj object
-function mt.deepcopy(obj)
+function mt.deepCopy(obj)
     local lookup_table = {}
     local function _copy(object)
         if type(object) ~= "table" then
@@ -32,7 +32,7 @@ function mt.deepcopy(obj)
 end
 --- mt.simplecopy 浅拷贝
 -- @param tbl table
-function mt.simplecopy(tbl)
+function mt.simpleCopy(tbl)
     local newtbl = {}
     for k, v in pairs(tbl) do
         if type(v) == 'table' then
@@ -58,7 +58,7 @@ function mt.shuffle(tbl)
 end
 --- mt.fromfile 逐行读取文件并保存到table中返回
 -- @param path 文件路径
-function mt.fromfile(path)
+function mt.fromFile(path)
     local Lines = {}
     local f = io.open(path, "r")
     if f == nil then return nil end
@@ -69,55 +69,22 @@ end
 --- mt.writefile 将数组保存到文件中,逐行保存
 -- @param path 文件路径,会覆盖原有文件
 -- @param tbl  数组
-function mt.writefile(path, tbl)
+function mt.writeFile(path, tbl, mode)
     tbl = table.concat(tbl, "\r\n")
-    local f = io.open(path, "w")
+    local f = io.open(path, mode or 'w')
     f:write(tbl)
     f:close()
 end
 
 function mt.print(t)
-    local print_r_cache = {}
-    local function sub_print_r(t, indent)
-        if (print_r_cache[tostring(t)]) then
-            print(indent .. "*" .. tostring(t))
-        else
-            print_r_cache[tostring(t)] = true
-            if (type(t) == "table") then
-                for pos, val in pairs(t) do
-                    if (type(val) == "table") then
-                        print(indent .. "[" .. pos .. "] => " .. tostring(t) ..
-                                  " {")
-                        sub_print_r(val, indent ..
-                                        string.rep(" ", string.len(pos) + 8))
-                        print(indent .. string.rep(" ", string.len(pos) + 6) ..
-                                  "}")
-                    elseif (type(val) == "string") then
-                        print(indent .. "[" .. pos .. '] => "' .. val .. '"')
-                    else
-                        print(indent .. "[" .. pos .. "] => " .. tostring(val))
-                    end
-                end
-            else
-                print(indent .. tostring(t))
-            end
-        end
-    end
-    if (type(t) == "table") then
-        print(tostring(t) .. " {")
-        sub_print_r(t, "  ")
-        print("}")
-    else
-        sub_print_r(t, "  ")
-    end
-    print()
+    var_dump(t)
 end
 
 ---@param t table table
 ---@param v any any
 function mt.indexOf(t, v)
     for k, value in ipairs(t) do if v == value then return k end end
-    return nil
+    return -1
 end
 ---@param t table table
 ---@param v any any

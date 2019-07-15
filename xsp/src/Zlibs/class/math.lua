@@ -61,7 +61,7 @@ end
 
 --- mt.sectoday 将时间(秒)转化为-天-小时-分-秒的格式
 -- @param Sec 时间(秒) number
-function mt.sectoday(Sec)
+function mt.secondToDay(Sec)
 	local iRet, sRet = pcall(function()
 		local Day,Hour,Min = 0,0,0
 		if Sec < 0 then
