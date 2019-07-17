@@ -4,7 +4,7 @@
 local Zlog = require 'Zlibs.class.Log'
 for _, config in ipairs(require'Z'.config.PluginList) do
     if config.enable then
-        if require'Z'[config.addIndex] then
+        if config.addIndex and require'Z'[config.addIndex] then
             Zlog.warn(
                 '插件<%s>加载失败,可能是已加载或与其他插件冲突',
                 config.name)
