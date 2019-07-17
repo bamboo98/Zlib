@@ -158,37 +158,39 @@ end
 -- @param str  字符串
 -- @param sval 删除起始位置
 -- @param eval 删除结束位置
-function mt.delpart(str,sval,eval)
+function mt.delPart(str,sval,eval)
 	local LStr = mt.utf8sub(str, 1, sval-1)
 	local RStr = mt.utf8sub(str, eval+1, -1)
 	local RetStr = LStr ..RStr
 	return RetStr
 end
---- mt.countstr 统计字符串中某个子串出现的次数
--- @param str    字符串
--- @param substr 子串
-function mt.countstr(str,substr)
+--- 统计字符串中某个子串出现的次数
+---@param str string '要检查的字符串'
+---@param substr string
+
+function mt.count(str,substr)
 	local count = 0
 	for _ in string.gmatch(str, substr) do
 		count = count +1
 	end
 	return count
 end
+
 --- mt.leftdel 删除字符串开头一定长度的字符,中文按1位算
 -- @param str 字符串
 -- @param num 长度
-function mt.leftdel(str,num)
+function mt.delLeft(str,num)
 	return mt.utf8sub(str,num + 1, -1)
 end
 --- mt.rightdel 删除字符串结尾一定长度的字符,中文按1位算
 -- @param str 字符串
 -- @param num 长度
-function mt.rightdel(str,num)
+function mt.delRight(str,num)
 	return mt.utf8sub(1, mt.utf8len(str) - num)
 end
---- mt.xmltotable 将xml字符串转换为table
+--- mt.xmlToTable 将xml字符串转换为table
 -- @param xml xml字符串
-function mt.xmltotable(xml)
+function mt.xmlToTable(xml)
 	local tXml = {}
 	local i = 1
 	for k in xml:gmatch("<node[^>]+/?>") do
@@ -200,13 +202,13 @@ function mt.xmltotable(xml)
 	end
 	return tXml
 end
---- mt.findxmlkey 查找xml字符串中的key,返回第一个匹配的结果
+--- mt.findXmlKey 查找xml字符串中的key,返回第一个匹配的结果
 -- @param Xml  xml字符串
 -- @param key  查找的key
 -- @param val  字段名
 -- @param key1 子key
-function mt.findxmlkey(Xml, key, val, key1)
-	local tXml = mt.xmltotable(Xml)
+function mt.findXmlKey(Xml, key, val, key1)
+	local tXml = mt.xmlToTable(Xml)
 	local i = 1
 	for i = 1, #tXml do
 		if tXml[i][key] == "\""..val.."\"" then
@@ -215,13 +217,13 @@ function mt.findxmlkey(Xml, key, val, key1)
 	end
 	return ""
 end
---- mt.findxmlkeyall 查找xml字符串中的key,返回所有匹配的结果
+--- mt.findXmlKeyAll 查找xml字符串中的key,返回所有匹配的结果
 -- @param Xml  xml字符串
 -- @param key  查找的key
 -- @param val  字段名
 -- @param key1 子key
-function mt.findxmlkeyall(Xml, key, val, key1)
-	local tXml = mt.xmltotable(Xml)
+function mt.findXmlKeyAll(Xml, key, val, key1)
+	local tXml = mt.xmlToTable(Xml)
 	local tmptable = {}
 	for i = 1, #tXml do
 		if tXml[i][key] == "\""..val.."\"" then
@@ -236,10 +238,11 @@ function mt.findxmlkeyall(Xml, key, val, key1)
 end
 --- mt.randomstr 获取指定长度的随机字符串,由
 -- @param len Describe the parameter
-function mt.randomstr(len)
+function mt.randomStr(len,list)
+	list=list or randomlist
 	local rt = ""
 	for i=1,len,1 do
-		rt = rt..randomlist[math.random(1,#randomlist)]
+		rt = rt..list[math.random(1,#list)]
 	end
 	return rt
 end
