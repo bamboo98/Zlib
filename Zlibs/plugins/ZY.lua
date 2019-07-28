@@ -51,7 +51,7 @@ local config = {
 
 local data = {
     -- 游戏名(需要填写)
-    gameName = "重装战姬",
+    gameName = "",
     -- 开发分辨率(需要填写)
     developWidth = 1920,
     developHeight = 1080,
