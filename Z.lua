@@ -38,7 +38,7 @@ local config = {
 Z.info = [[
 Author: 竹子菌
 QQ: 454689880
-Updated: 2019年7月15日16:37:19
+Updated: 2019年7月28日18:33:11
 Project: https://github.com/bamboo98/Zlibs
 开发手册: https://www.yuque.com/zhuzijun/zlibs
 请关注github获取最新版更新,Zlibs仍在开发中
@@ -76,7 +76,12 @@ function Z.init()
     require"Zlibs.class.Sequence"._init()
     require"Zlibs.class.Finger"._init()
     printf('Zlibs加载成功\r%s', Z.info)
-    if #(config.PluginList) > 0 then pcall(require, 'Zlibs.plugins.init') end
+    if #(config.PluginList) > 0 then
+        print('开始加载插件')
+        pcall(require, 'Zlibs.plugins.init')
+    else
+        print('配置文件中没有插件')
+    end
 end
 function Z.MD5(s)
     local md5func = rawget(_G, 'md5') or rawget(_G, 'md5_fast') or

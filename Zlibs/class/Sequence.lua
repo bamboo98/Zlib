@@ -127,7 +127,10 @@ if version == 1 then
         local p = api.findColor(Rect(self.point[1] + (-range),
                                      self.point[1] + range), self, degree, hdir,
                                 vdir, priority)
-        if p ~= Point.INVALID then p:tap() end
+        if p ~= Point.INVALID then
+            Zlog.trace('findTap:%s', self.name)
+            p:tap()
+        end
         return p
     end
     obj.findMultiInRange = function(self, range, degree, hdir, vdir, priority,
@@ -153,7 +156,10 @@ elseif version == 2 then
         local p = api.findColor(Rect(self.point[1] + (-range),
                                      self.point[1] + range), self, globalFuzz,
                                 priority)
-        if p ~= Point.INVALID then p:tap() end
+        if p ~= Point.INVALID then
+            Zlog.trace('findTap:%s', self.name)
+            p:tap()
+        end
         return p
     end
     obj.findMultiInRange = function(self, range, globalFuzz, priority, limit)

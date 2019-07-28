@@ -390,16 +390,17 @@ end
 --- obj.scaleMoveEnlarge 双指放大,以center为中心,手指移动距离为size的width和height
 -- @param center 放大的中心,Point
 -- @param size   手指移动距离为Size的width和height
-function obj.scaleMoveEnlarge(center, size)
+function obj.scaleMoveEnlarge(center, size, speed)
+    speed = speed or 1
     local p1 = Point(center.x + 0.2 * size.width, center.y + 0.2 * size.height)
     local p2 = Point(center.x - 0.2 * size.width, center.y - 0.2 * size.height)
     local way1, way2
-    way1 = getWay(p1.x, p1.y, center.x + size.width, center.y + size.height, 3,
-                  way1)
-    way2 = getWay(p2.x, p2.y, center.x - size.width, center.y - size.height, 3,
-                  way2)
+    way1 = getWay(p1.x, p1.y, center.x + size.width, center.y + size.height,
+                  3 * speed, way1)
+    way2 = getWay(p2.x, p2.y, center.x - size.width, center.y - size.height,
+                  3 * speed, way2)
     local step = math.min(#way1[1], #way2[1])
-    local f1, f2 = obj.down(nil, p1), obj.down(nil, p2)
+    local f1, f2 = obj.down(p1), obj.down(p2)
     for i = 1, step do
         f1:move(way1[1][i], way1[2][i])
         f2:move(way2[1][i], way2[2][i])
@@ -413,16 +414,17 @@ end
 --- obj.scaleMoveEnlarge 双指缩小,以center为中心,手指移动距离为size的width和height
 -- @param center 缩小的中心,Point
 -- @param size   手指移动距离为Size的width和height
-function obj.scaleMoveShrink(center, size)
+function obj.scaleMoveShrink(center, size, speed)
+    speed = speed or 1
     local p1 = Point(center.x + size.width, center.y + size.height)
     local p2 = Point(center.x - size.width, center.y - size.height)
     local way1, way2
     way1 = getWay(p1.x, p1.y, center.x + 0.2 * size.width,
-                  center.y + 0.2 * size.height, 3, way1)
+                  center.y + 0.2 * size.height, 3 * speed, way1)
     way2 = getWay(p2.x, p2.y, center.x - 0.2 * size.width,
-                  center.y - 0.2 * size.height, 3, way2)
+                  center.y - 0.2 * size.height, 3 * speed, way2)
     local step = math.min(#way1[1], #way2[1])
-    local f1, f2 = obj.down(nil, p1), obj.down(nil, p2)
+    local f1, f2 = obj.down(p1), obj.down(p2)
     for i = 1, step do
         f1:move(way1[1][i], way1[2][i])
         f2:move(way2[1][i], way2[2][i])

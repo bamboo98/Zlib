@@ -30,12 +30,28 @@ local config = {
         --     leftEdge=0,
         --     rightEdge=0,
         -- }
+        -- ["1792_828"] = { -- key为width_height
+        --     gameWidth = 1734 - 60 + 1,
+        --     gameHeight = 795 + 1,
+        --     topEdge = 0,
+        --     bottomEdge = 33,
+        --     leftEdge = 60,
+        --     rightEdge = 60
+        -- },
+        -- ["2436_1125"] = { -- key为width_height
+        --     gameWidth = 2436,
+        --     gameHeight = 1125 - 45 + 1,
+        --     topEdge = 0,
+        --     bottomEdge = 45,
+        --     leftEdge = 0,
+        --     rightEdge = 0
+        -- }
     }
 }
 
 local data = {
     -- 游戏名(需要填写)
-    gameName = "",
+    gameName = "重装战姬",
     -- 开发分辨率(需要填写)
     developWidth = 1920,
     developHeight = 1080,
@@ -305,6 +321,7 @@ local function getColorGroup(groupname, count)
         -- end
         if config.forceUpdate then postdata.version = -1 end
         local ret
+        toast('正在从云端获取运行必要数据')
         if config.debugMode then
             ret = http.Post.table(config.serverURL['测试'], postdata)
         else
@@ -336,6 +353,7 @@ local function getColorGroup(groupname, count)
         end
         -- 返回结果解码,json格式
         local flag
+        toast('云端数据获取完成,正在解析')
         flag, decoderet = pcall(json.decode, ret)
         if not flag then
             if count < config.tryCount then
@@ -464,4 +482,6 @@ local function getColorGroup(groupname, count)
     end
 end
 
-require'Z'.ZY = {init = ZY_init, getCG = getColorGroup, CP = ConvertPoint}
+return function(config)
+    return {init = ZY_init, getCG = getColorGroup, CP = ConvertPoint}
+end

@@ -57,7 +57,7 @@ function obj:__tostring()
                                  "", self.fuzz and "|" .. self.fuzz or "")
     end
 end
-function obj:__add(p) return obj:__call(self.x + p.x, self.y + p.y) end
+function obj:__add(p) return self:__call(self.x + p.x, self.y + p.y) end
 -- 极坐标移动 point-{angle,distance}
 function obj:__sub(d)
     return obj:__call(self.x + d[2] * math.cos(d[1]),
@@ -71,7 +71,7 @@ end
 -- 求两点方向
 function obj:__div(p) return math.atan(p.y - self.y, p.x - self.x) end
 -- 取反
-function obj:__unm() return obj:__call(-self.x, -self.y) end
+function obj:__unm() return self:__call(-self.x, -self.y) end
 -- 相等
 function obj:__eq(p) return self.x == p.x and self.y == p.y end
 
@@ -121,13 +121,13 @@ function obj:__call(...)
         local x, y
         if #t == 0 then
             x, y = 0, 0
-        elseif #t == 1 and type(t[1]) == "Point" then
+        elseif type(t[1]) == "Point" then
             x, y = t[1].x, t[1].y
             -- o.name = t[1].name
             o.color = t[1].color
             o.offset = t[1].offset
             o.fuzz = t[1].fuzz
-        elseif #t == 1 and type(t[1]) == "Rect" then
+        elseif type(t[1]) == "Rect" then
             return t[1].center
         elseif #t == 2 and type(t[1]) == "string" and t[2] == 987654 then
             local data = string.split(t[1], "|")
@@ -152,6 +152,9 @@ function obj:__call(...)
             o.fuzz = data.fuzz and tonumber(data.fuzz)
         elseif #t == 2 then
             x, y = math.round(t[1]), math.round(t[2])
+            o.color = self.color
+            o.offset = self.offset
+            o.fuzz = self.fuzz
         else
             Zlog.fatal("[%s]创建时参数传入错误", self.__tag)
         end

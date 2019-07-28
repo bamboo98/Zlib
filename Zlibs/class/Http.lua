@@ -378,7 +378,7 @@ local function PostTableByJson(url, tbl)
     }
     api.sysLog(str)
     if code == 200 then
-        return response_body[1]
+        return table.concat(response_body)
     else
         Zlog.error("HTTP错误: %s", status)
         return ""
@@ -414,7 +414,7 @@ local function PostTable(url, tbl)
         sink = ltn12.sink.table(response_body)
     }
     if code == 200 then
-        return response_body[1]
+        return table.concat(response_body)
     else
         Zlog.error("HTTP错误: %s", status)
         return ""
@@ -437,7 +437,7 @@ local function GetTable(url, tbl)
         sink = ltn12.sink.table(response_body)
     }
     if code == 200 then
-        return response_body[1]
+        return table.concat(response_body)
     else
         Zlog.error("HTTP错误: %s", status)
         return ""
@@ -460,7 +460,7 @@ local function PostString(url, str)
         sink = ltn12.sink.table(response_body)
     }
     if code == 200 then
-        return response_body[1]
+        return table.concat(response_body)
     else
         Zlog.error("HTTP错误: %s", status)
         return ""
@@ -483,7 +483,7 @@ local function GetString(url, str)
         sink = ltn12.sink.table(response_body)
     }
     if code == 200 then
-        return response_body[1]
+        return table.concat(response_body)
     else
         Zlog.error("HTTP错误: %s", status)
         return ""
@@ -680,7 +680,7 @@ local function multipartSend(url, content)
     -- var_dump(response_body)
     -- 如果没有请求成功,返回false
     if code == 200 then
-        return response_body[1]
+        return table.concat(response_body)
     else
         Zlog.error("HTTP错误: %s", status)
         return ""

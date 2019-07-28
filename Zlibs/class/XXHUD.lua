@@ -2,6 +2,8 @@
 local Zlog = require "Zlibs.class.Log"
 local Rect = require "Zlibs.class.Rect"
 local type = require "Zlibs.tool.type"
+local Point = require "Zlibs.class.Point"
+local Size = require "Zlibs.class.Size"
 
 local string = require "Zlibs.class.string"
 local obj = {}
@@ -73,7 +75,7 @@ function obj:__call(...)
                       t[1])
             o = AllHUD[t[1]]
         end
-        rawset(o, "name", t[1])
+        rawset(o.aaaaaa, "name", t[1])
         AllHUD[o.aaaaaa.name] = o
 
         ---@param data table | "{text='文本',size=10,color='0xffffff00',bg='0x33333333',rect=Rect(0,0,150,30)}"
